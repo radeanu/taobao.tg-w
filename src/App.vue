@@ -7,12 +7,11 @@ import { RouterView } from 'vue-router';
 const app = window.Telegram.WebApp;
 app.ready();
 app.expand();
-// app.MainButton.show();
-// app.BackButton.show();
-// app.CloudStorage.setItem('name', 'SKA');
-app.enableClosingConfirmation();
+// app.enableClosingConfirmation();
 
-// app.setHeaderColor('orange');
+Object.entries(app.themeParams).forEach(([key, value]) => {
+    document.documentElement.style.setProperty(`--${key}`, value);
+});
 </script>
 
 <style lang="scss" scoped></style>

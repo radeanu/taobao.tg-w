@@ -61,9 +61,18 @@ main {
     height: calc(100% + 1px);
 }
 
+h3 {
+    color: var(--section_header_text_color);
+}
+
 form {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+button {
+    color: var(--button_text_color);
+    background-color: var(--button_color);
 }
 </style>
