@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h3>Form example v4</h3>
+        <h3>Form example v5</h3>
 
         <form @submit.prevent>
             <input type="text" name="name" v-model="payload.name" />
@@ -51,7 +51,7 @@ function onFileChange(ev: Event) {
 
 function handleSubmit() {
     payload.value.name = 'SENDED';
-    app.sendData('Hello');
+    app.close();
 }
 </script>
 
