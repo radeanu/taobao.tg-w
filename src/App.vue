@@ -10,6 +10,7 @@ app.expand();
 app.MainButton.show();
 app.BackButton.show();
 app.CloudStorage.setItem('name', 'SKA');
+app.enableClosingConfirmation();
 
 // app.setHeaderColor('orange');
 </script>
