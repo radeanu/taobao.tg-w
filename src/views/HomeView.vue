@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h3>Form example</h3>
+        <h3>Form example v1</h3>
 
         <form @submit.prevent>
             <input type="text" name="name" v-model="payload.name" />
@@ -11,7 +11,7 @@
             <button @click="handleSubmit">Submit</button>
         </form>
 
-        {{ name }}
+        <pre>{{ name }}</pre>
 
         <pre>{{ payload }}</pre>
         <pre>{{ app }}</pre>
