@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h3>Form example v9</h3>
+        <h3>Form example v10</h3>
 
         <form @submit.prevent>
             <input type="text" name="name" v-model="payload.name" />
@@ -63,7 +63,7 @@ main {
 }
 
 h3 {
-    color: var(--section_header_text_color);
+    color: var(--tg-theme-section-header-text-color);
 }
 
 form {
@@ -73,7 +73,7 @@ form {
 }
 
 button {
-    color: var(--button_text_color);
-    background-color: var(--button_color);
+    color: var(--tg-theme-button-text-color);
+    background-color: var(--tg-theme-button-color);
 }
 </style>
