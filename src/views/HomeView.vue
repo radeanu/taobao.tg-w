@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h3>Form example v5</h3>
+        <h3>Form example v6</h3>
 
         <form @submit.prevent>
             <input type="text" name="name" v-model="payload.name" />
@@ -20,11 +20,13 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
 
 const app = window.Telegram.WebApp;
 const storage = ref(window.Telegram.WebApp.CloudStorage);
 const name = ref<string | null>();
-// app.setBackgroundColor('bg_color');
+
+const router = useRouter();
 
 watchEffect(() => {
     storage.value.getItem('name', (v) => {
@@ -49,16 +51,13 @@ function onFileChange(ev: Event) {
     payload.value.files = target.files;
 }
 
-function handleSubmit() {
-    payload.value.name = 'SENDED';
-    app.close();
+async function handleSubmit() {
+    router.push('/success');
 }
 </script>
 
 <style lang="scss">
 main {
-    // width: 100%;
-    // height: 100%;
     height: calc(100% + 1px);
 }
 
@@ -66,7 +65,5 @@ form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    background-color: white;
-    color: #111111;
 }
 </style>
