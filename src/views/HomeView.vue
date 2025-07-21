@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h3>Form example v7</h3>
+        <h3>Form example v8</h3>
 
         <form @submit.prevent>
             <input type="text" name="name" v-model="payload.name" />
@@ -58,6 +58,7 @@ async function handleSubmit() {
 
 <style lang="scss">
 main {
+    padding: 20px 10px;
     height: calc(100% + 1px);
 }
 
