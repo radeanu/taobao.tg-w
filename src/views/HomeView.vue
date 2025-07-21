@@ -43,8 +43,9 @@ function onFileChange(ev: Event) {
 
 <style lang="scss">
 main {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
+    height: calc(100% + 1px);
 }
 
 form {
