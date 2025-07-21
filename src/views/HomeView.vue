@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h3>Form example v8</h3>
+        <h3>Form example v9</h3>
 
         <form @submit.prevent>
             <input type="text" name="name" v-model="payload.name" />
