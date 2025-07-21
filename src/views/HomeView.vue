@@ -7,10 +7,11 @@
             <input type="number" name="number" v-model="payload.number" />
 
             <input type="file" name="file" @change="onFileChange" />
+
+            <button @click="handleSubmit">Submit</button>
         </form>
 
         <pre>{{ payload }}</pre>
-
         <pre>{{ app }}</pre>
     </main>
 </template>
@@ -19,7 +20,6 @@
 import { ref } from 'vue';
 
 const app = window.Telegram.WebApp;
-console.log(app);
 
 // app.setBackgroundColor('bg_color');
 
@@ -38,6 +38,10 @@ function onFileChange(ev: Event) {
     if (!target.files?.length) return;
 
     payload.value.files = target.files;
+}
+
+function handleSubmit() {
+    app.sendData(JSON.stringify(payload));
 }
 </script>
 
