@@ -25,7 +25,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  VITE_APP_BASE: /taobao.tg-web/
+  VITE_APP_BASE: /taobao.tg-w/
 
 jobs:
   build:
