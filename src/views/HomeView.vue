@@ -42,6 +42,11 @@ function onFileChange(ev: Event) {
 </script>
 
 <style lang="scss">
+main {
+    width: 100%;
+    height: 100%;
+}
+
 form {
     display: flex;
     flex-direction: column;
