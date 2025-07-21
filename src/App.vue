@@ -7,7 +7,9 @@ import { RouterView } from 'vue-router';
 const app = window.Telegram.WebApp;
 app.ready();
 app.expand();
-app.sendData('Hello');
+app.MainButton.show();
+app.BackButton.show();
+app.CloudStorage.setItem('name', 'SKA');
 
 // app.setHeaderColor('orange');
 </script>

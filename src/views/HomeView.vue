@@ -11,17 +11,26 @@
             <button @click="handleSubmit">Submit</button>
         </form>
 
+        {{ name }}
+
         <pre>{{ payload }}</pre>
         <pre>{{ app }}</pre>
     </main>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 const app = window.Telegram.WebApp;
-
+const storage = ref(window.Telegram.WebApp.CloudStorage);
+const name = ref<string | null>();
 // app.setBackgroundColor('bg_color');
+
+watchEffect(() => {
+    storage.value.getItem('name', (v) => {
+        name.value = v;
+    });
+});
 
 const payload = ref<{
     name: string;
