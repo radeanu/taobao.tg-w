@@ -14,7 +14,7 @@
         <pre>{{ name }}</pre>
 
         <pre>{{ payload }}</pre>
-        <pre>{{ app }}</pre>
+        <!-- <pre>{{ app }}</pre> -->
     </main>
 </template>
 
@@ -22,17 +22,17 @@
 import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
-const app = window.Telegram.WebApp;
-const storage = ref(window.Telegram.WebApp.CloudStorage);
+// const app = window.Telegram.WebApp;
+// const storage = ref(window.Telegram.WebApp.CloudStorage);
 const name = ref<string | null>();
 
 const router = useRouter();
 
-watchEffect(() => {
-    storage.value.getItem('name', (v) => {
-        name.value = v;
-    });
-});
+// watchEffect(() => {
+//     storage.value.getItem('name', (v) => {
+//         name.value = v;
+//     });
+// });
 
 const payload = ref<{
     name: string;

@@ -1,0 +1,28 @@
+@use '@/styles/_mixins.scss' as *;
+
+:root {
+    --layout-pad-x: 16px;
+    --layout-pad-y: 16px;
+    --layout-max-width: 1218px;
+
+    --border-radius-s: 4px;
+    --border-radius: 8px;
+    --border-radius-m: 16px;
+
+    --icon-width: 20px;
+    --icon-height: 20px;
+    --icon-color: var(--color-black);
+
+    --modal-width: 100%;
+    --modal-height: fit-content;
+    --modal-max-width: var(--layout-max-width);
+
+    --z-index: 1;
+    --z-index-modal: 2;
+}
+
+@include desktop {
+    :root {
+        --layout-pad-x: 32px;
+    }
+}

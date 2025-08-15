@@ -1,0 +1,27 @@
+@mixin useFont($type) {
+    font-style: normal;
+    font-size: var(--font-#{$type}-size);
+    line-height: var(--font-#{$type}-height);
+    font-weight: var(--font-#{$type}-weight);
+    letter-spacing: var(--font-#{$type}-letter);
+}
+
+@mixin useFixedSize($width, $height) {
+    min-width: $width;
+    min-height: $height;
+
+    max-width: $width;
+    max-height: $height;
+}
+
+@mixin desktop {
+    @media screen and (min-width: 768px) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media screen and (max-width: 768px) {
+        @content;
+    }
+}

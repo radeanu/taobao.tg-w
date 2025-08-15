@@ -1,0 +1,20 @@
+@use '@/styles/_mixins.scss' as *;
+
+body {
+    @include useFont(mrt2);
+
+    overflow: hidden;
+    font-family: var(--font-family);
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+#app {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
