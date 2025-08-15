@@ -26,6 +26,11 @@ concurrency:
 
 env:
   VITE_APP_BASE: /taobao.tg-w/
+  VITE_AIR_API_KEY: path9aa2X11MYIyD7.9d3a691a38340772abedf34218261ad7ee57d9fe43f41470dd4cc3e460d51b7b
+  VITE_AIR_BASE: appONbarfkCzyLYNu
+  VITE_AIR_SIZES_TABLE: tblGQWoeQ6QhQsFzm
+  VITE_AIR_COLORS_TABLE: tblZ3l8DNWdCD0vlT
+  VITE_AIR_PRODUCTS_TABLE: tbl2LnfGcyArUNXD9
 
 jobs:
   build:
