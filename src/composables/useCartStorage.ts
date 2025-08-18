@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 
 import type { CartItem } from '@/common/types';
@@ -10,6 +10,10 @@ export const cartStore = defineStore('cart', () => {
     const uid = user?.id.toString();
 
     const cart = ref<CartItem[]>([]);
+
+    watchEffect(() => {
+        console.log(JSON.parse(JSON.stringify(cart.value)));
+    });
 
     onMounted(async () => {
         await fetchCart();

@@ -6,7 +6,7 @@
 
         <ShButton
             v-if="isInCart"
-            label="В корзину"
+            label="В корзине"
             kind="telegram"
             full-width
             class="btn-buy"
