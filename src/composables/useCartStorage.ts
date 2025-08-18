@@ -36,7 +36,7 @@ export const cartStore = defineStore('cart', () => {
         return new Promise((resolve) => {
             if (!uid) return resolve(null);
 
-            storage.getItem('cart', (error, data) => {
+            storage.getItem(uid, (error, data) => {
                 if (error || !data) return resolve(null);
 
                 const parsed = JSON.parse(data) as { products: CartItem[] };
