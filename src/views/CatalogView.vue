@@ -1,6 +1,5 @@
 <template>
     <main>
-        <pre>{{ supported }}</pre>
         <div v-if="loader.isLoading.value" class="loading">Загрузка...</div>
 
         <div v-if="products.length">
@@ -40,13 +39,14 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { cloudStorage } from '@telegram-apps/sdk';
 
 import { ShImage, ShButton } from '@/components/UI';
 
 import { useCatalog } from '@/composables/useCatalog';
 
-const supported = cloudStorage.isSupported();
+const app = window.Telegram.WebApp;
+
+console.log(app.CloudStorage);
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 onMounted(async () => {
