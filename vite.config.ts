@@ -1,14 +1,21 @@
 import path from 'path';
-import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { fileURLToPath, URL } from 'node:url';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 
 const APP_BASE = process.env.VITE_APP_BASE ?? '/';
 
 // https://vite.dev/config/
 export default defineConfig({
     base: APP_BASE,
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        createSvgIconsPlugin({
+            iconDirs: [path.resolve(process.cwd(), './public/images/svg')],
+            symbolId: 'icon-[dir]-[name]'
+        })
+    ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),

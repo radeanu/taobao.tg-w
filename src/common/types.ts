@@ -20,6 +20,7 @@ export type AirImage = {
 };
 
 export type AirProduct = {
+    id: string;
     article: number;
     weight?: number;
     link: string;
@@ -54,6 +55,7 @@ export type AirPagination = {
 };
 
 export type Product = {
+    id: string;
     article: number;
     weight?: number;
     link: string;
@@ -69,4 +71,9 @@ export type Product = {
         name: string;
         image: AirImage | null;
     }>;
+};
+
+export type CartItem = {
+    id: string;
+    count: number;
 };

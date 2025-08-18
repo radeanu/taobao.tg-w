@@ -1,15 +1,9 @@
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
-import { productApi, colorApi, sizeApi } from '@/composables/useAirtable';
 import { useLoading } from '@/composables/useLoading';
-import type {
-    Product,
-    AirProduct,
-    AirPagination,
-    AirRecord,
-    AirFieldSet
-} from '@/common/types';
 import { COLOR_MAP, PRODUCT_MAP, SIZE_MAP } from '@/common/model';
+import { productApi, colorApi, sizeApi } from '@/composables/useAirtable';
+import type { Product, AirProduct, AirPagination, AirRecord } from '@/common/types';
 
 export function useCatalog() {
     const loader = useLoading();
@@ -48,6 +42,7 @@ export function useCatalog() {
         });
 
         return {
+            id: product.id,
             article: product.article,
             link: product.link,
             priceCny: product.priceCny,
@@ -140,6 +135,7 @@ export function useCatalog() {
             pagination.value.offset = res.data?.offset;
             const list = records.map((record: AirRecord) => {
                 const payload = {
+                    id: record.id,
                     article: record.fields?.[PRODUCT_MAP.article],
                     weight: record.fields?.[PRODUCT_MAP.weight],
                     link: record.fields?.[PRODUCT_MAP.link],
