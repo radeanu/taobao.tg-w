@@ -18,11 +18,7 @@
             @click="fetchMore"
         />
 
-        <ShButton
-            v-if="!loader.isLoading.value && cart.length"
-            class="btn-cart"
-            kind="telegram"
-        >
+        <ShButton class="btn-cart" kind="telegram">
             {{ cart.length }}
         </ShButton>
     </main>
