@@ -31,6 +31,28 @@ export type AirProduct = {
     sizes: string[];
 };
 
+export type AirFieldSet = {
+    [key: string]:
+        | undefined
+        | string
+        | number
+        | boolean
+        | ReadonlyArray<string>
+        | ReadonlyArray<AirImage>;
+};
+
+export type AirRecord = {
+    id: string;
+    createdTime: string;
+    fields: AirFieldSet;
+};
+
+export type AirPagination = {
+    offset: string | undefined;
+    page: number;
+    limit: number;
+};
+
 export type Product = {
     article: number;
     weight?: number;

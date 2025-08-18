@@ -26,7 +26,7 @@ export type ShButtonT = {
     iconLeft?: string;
     iconRight?: string;
     fullWidth?: boolean;
-    kind?: 'primary' | 'secondary' | 'unstyled';
+    kind?: 'primary' | 'secondary' | 'telegram' | 'unstyled';
 };
 
 const $emit = defineEmits<{ (e: 'click'): void }>();
@@ -101,5 +101,11 @@ const btnClasses = computed(() => {
         border-color: var(--color-black);
         background-color: var(--color-black);
     }
+}
+
+.btn-telegram {
+    color: var(--tg-theme-button-text-color, var(--color-white));
+    border-color: var(--tg-theme-button-color, var(--color-grey));
+    background-color: var(--tg-theme-button-color, var(--color-grey));
 }
 </style>
