@@ -10,6 +10,7 @@
             kind="telegram"
             full-width
             class="btn-buy"
+            @click="removeFromCart(product.id)"
         />
 
         <ShButton
@@ -34,7 +35,7 @@ const props = defineProps<{
     product: Product;
 }>();
 
-const { cart, addToCart } = cartStore();
+const { cart, addToCart, removeFromCart } = cartStore();
 
 const isInCart = computed(() => {
     return cart.some((p) => p.id === props.product.id);
