@@ -39,6 +39,8 @@ import ProductCard from '@/components/ProductCard.vue';
 import CartButton from '@/components/CartButton.vue';
 import { useCartStore } from '@/composables/useCartStorage';
 
+const app = window.Telegram.WebApp;
+
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 const cartStore = useCartStore();
 
@@ -47,6 +49,7 @@ const showCartButton = computed(() => {
 });
 
 onMounted(async () => {
+    app.BackButton.hide();
     await fetchProductsCatalog();
 });
 </script>
