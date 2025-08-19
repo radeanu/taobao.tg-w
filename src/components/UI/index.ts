@@ -1,8 +1,8 @@
-import ShIcon from './ShIcon.vue';
-import ShModal from './ShModal.vue';
-import ShImage from './ShImage.vue';
-import ShBadge from './ShBadge.vue';
-import ShButton from './ShButton.vue';
-import ShSkeleton from './ShSkeleton.vue';
-
-export { ShButton, ShIcon, ShImage, ShSkeleton, ShModal, ShBadge };
+export { default as ShChip } from './ShChip.vue';
+export { default as ShIcon } from './ShIcon.vue';
+export { default as ShBadge } from './ShBadge.vue';
+export { default as ShImage } from './ShImage.vue';
+export { default as ShModal } from './ShModal.vue';
+export { default as ShButton } from './ShButton.vue';
+export { default as ShSkeleton } from './ShSkeleton.vue';
+export { default as ShHorizontalCarousel } from './ShHorizontalCarousel.vue';

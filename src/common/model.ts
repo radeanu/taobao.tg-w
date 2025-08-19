@@ -11,9 +11,11 @@ export const PRODUCT_MAP = {
 };
 
 export const COLOR_MAP = {
-    name: 'Название'
+    name: 'Название',
+    product: 'Продукт'
 };
 
 export const SIZE_MAP = {
-    name: 'Размер Китайский'
+    name: 'Размер Китайский',
+    product: 'Продукт'
 };

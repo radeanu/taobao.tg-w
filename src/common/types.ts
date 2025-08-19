@@ -70,6 +70,7 @@ export type Product = {
         id: string;
         name: string;
         image: AirImage | null;
+        product: string | null;
     }>;
 };
 

@@ -1,23 +1,43 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { useLoading } from '@/composables/useLoading';
 import { COLOR_MAP, PRODUCT_MAP, SIZE_MAP } from '@/common/model';
 import { productApi, colorApi, sizeApi } from '@/composables/useAirtable';
-import type { Product, AirProduct, AirPagination, AirRecord } from '@/common/types';
+import type { Product, AirProduct, AirRecord } from '@/common/types';
 
 export function useProductPage() {
+    const route = useRoute();
     const loader = useLoading();
 
     const product = ref<Product | null>(null);
-    const colors: { [key: string]: string } = {};
+    const selectedSize = ref<string | null>(null);
+    const colors: { [key: string]: { name: string; product: string } } = {};
     const sizes: { [key: string]: string } = {};
+
+    watch(
+        () => route.params.id,
+        async (newId) => {
+            if (newId) {
+                await fetchProductById(newId as string);
+            }
+        },
+        { immediate: true }
+    );
+
+    watch(product, (newProduct) => {
+        if (newProduct) {
+            selectedSize.value = newProduct.sizes?.[0]?.id || null;
+        }
+    });
 
     function formatProduct(product: AirProduct): Product {
         const colorsL = product.colors.map((cId, idx) => {
             return {
                 id: cId,
-                name: colors[cId as keyof typeof colors] ?? '-',
-                image: product.colorsPhoto?.[idx] ?? null
+                image: product.colorsPhoto?.[idx] ?? null,
+                name: colors[cId as keyof typeof colors].name ?? '-',
+                product: colors[cId as keyof typeof colors].product ?? null
             };
         });
 
@@ -45,7 +65,7 @@ export function useProductPage() {
         try {
             for (let i = 0; i < Object.keys(colors).length; i += 100) {
                 const batch = Object.entries(colors)
-                    .filter(([_, color]) => !color.length)
+                    .filter(([_, color]) => !color.name.length)
                     .map(([id]) => id)
                     .slice(i, i + 100);
 
@@ -60,7 +80,12 @@ export function useProductPage() {
                 const records = res.data?.records ?? [];
 
                 records.forEach((r: AirRecord) => {
-                    colors[r.id] = r.fields[COLOR_MAP.name] as string;
+                    const ids = r.fields?.product_id as string[];
+
+                    colors[r.id] = {
+                        product: ids?.[0] ?? null,
+                        name: r.fields[COLOR_MAP.name] as string
+                    };
                 });
             }
         } catch (error) {
@@ -104,7 +129,7 @@ export function useProductPage() {
             const colorsL = (record.fields[PRODUCT_MAP.colors] ?? []) as string[];
             const sizesL = (record.fields[PRODUCT_MAP.sizes] ?? []) as string[];
 
-            colorsL.forEach((v) => (colors[v] = ''));
+            colorsL.forEach((v) => (colors[v] = { name: '', product: '' }));
             sizesL.forEach((v) => (sizes[v] = ''));
 
             await _fetchColors();
@@ -134,6 +159,6 @@ export function useProductPage() {
     return {
         loader,
         product,
-        fetchProductById
+        selectedSize
     };
 }
