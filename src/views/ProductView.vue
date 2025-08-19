@@ -116,9 +116,7 @@ main {
 .product-details {
     margin-bottom: 20px;
     padding: 20px;
-    border: 1px solid var(--tg-secondary-bg-color, #f0f0f0);
     border-radius: 8px;
-    background-color: var(--tg-bg-color, #fafafa);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
