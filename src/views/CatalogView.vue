@@ -27,7 +27,12 @@
             @click="fetchMore"
         />
 
-        <ShButton v-if="showCartButton" class="btn-cart" kind="telegram" icon-left="cart">
+        <ShButton
+            v-if="showCartButton"
+            class="btn-cart"
+            kind="secondary"
+            icon-left="cart"
+        >
             <ShBadge kind="error" rounded class="cart-badge">
                 {{ cartStore.cart.length }}
             </ShBadge>
@@ -47,9 +52,7 @@ const cartStore = useCartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 const showCartButton = computed(() => {
-    return (
-        !loader.isLoading.value && cartStore.cart.length > 0 && products.value.length > 0
-    );
+    return cartStore.cart.length > 0 && products.value.length > 0;
 });
 
 onMounted(async () => {
