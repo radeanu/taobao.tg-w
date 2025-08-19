@@ -6,6 +6,8 @@ export function useStorage() {
     const isTelegram = Boolean(userId && tgStorage);
 
     function getItem(key: string): Promise<string | null> {
+        console.log({ isTelegram });
+
         if (isTelegram) {
             const namespacedKey = `${userId}:${key}`;
             return new Promise((resolve) => {
@@ -25,6 +27,8 @@ export function useStorage() {
     }
 
     function setItem(key: string, value: string): Promise<boolean> {
+        console.log({ isTelegram });
+
         if (isTelegram) {
             const namespacedKey = `${userId}:${key}`;
             return new Promise((resolve) => {

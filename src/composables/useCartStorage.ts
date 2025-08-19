@@ -40,8 +40,8 @@ export const useCartStore = defineStore('cart', () => {
 
             const parsed = JSON.parse(data) as { products: CartItem[] };
             cart.value = parsed.products ?? [];
-        } catch (_) {
-            cart.value = [];
+        } catch (e) {
+            console.log(e);
         }
     }
 
