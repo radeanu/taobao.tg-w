@@ -77,3 +77,10 @@ export type CartItem = {
     id: string;
     count: number;
 };
+
+export type CartProduct = {
+    id: string;
+    article: number;
+    priceRub: number;
+    image: AirImage | null;
+};

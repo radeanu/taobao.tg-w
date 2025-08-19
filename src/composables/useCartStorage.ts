@@ -1,77 +1,65 @@
 import { defineStore } from 'pinia';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import type { CartItem } from '@/common/types';
+import { useStorage } from '@/composables/useStorage';
 
 export const useCartStore = defineStore('cart', () => {
-    const app = window.Telegram.WebApp;
-    const user = app.initDataUnsafe.user;
-    const storage = app.CloudStorage;
-    const uid = user?.id.toString();
+    const storage = useStorage();
 
     const cart = ref<CartItem[]>([]);
-
-    watchEffect(() => {
-        console.log(JSON.parse(JSON.stringify(cart.value)));
-    });
 
     onMounted(async () => {
         await fetchCart();
     });
 
-    function addToCart(id: string): Promise<boolean> {
-        return new Promise(async (resolve) => {
-            if (!uid) return resolve(false);
+    async function addToCart(id: string): Promise<boolean> {
+        await fetchCart();
 
-            await fetchCart();
+        const existing = cart.value.find((v) => v.id === id);
+        if (existing) {
+            existing.count += 1;
+        } else {
             cart.value.push({ id, count: 1 });
+        }
 
-            storage.setItem(
-                uid,
-                JSON.stringify({ products: cart.value }),
-                (error, success) => {
-                    return error || !success ? resolve(false) : resolve(true);
-                }
-            );
-        });
+        return storage.setItem('cart', JSON.stringify({ products: cart.value }));
     }
 
-    function removeFromCart(id: string): Promise<boolean> {
-        return new Promise(async (resolve) => {
-            if (!uid) return resolve(false);
+    async function removeFromCart(id: string) {
+        await fetchCart();
+        cart.value = cart.value.filter((v) => v.id !== id);
 
-            await fetchCart();
-            cart.value = cart.value.filter((v) => v.id !== id);
-
-            storage.setItem(
-                uid,
-                JSON.stringify({ products: cart.value }),
-                (error, success) => {
-                    return error || !success ? resolve(false) : resolve(true);
-                }
-            );
-        });
+        return storage.setItem('cart', JSON.stringify({ products: cart.value }));
     }
 
-    function fetchCart() {
-        return new Promise((resolve) => {
-            if (!uid) return resolve(null);
+    async function fetchCart() {
+        try {
+            const data = await storage.getItem('cart');
+            if (!data) return;
 
-            storage.getItem(uid, (error, data) => {
-                if (error || !data) return resolve(null);
+            const parsed = JSON.parse(data) as { products: CartItem[] };
+            cart.value = parsed.products ?? [];
+        } catch (_) {
+            cart.value = [];
+        }
+    }
 
-                const parsed = JSON.parse(data) as { products: CartItem[] };
-                console.log(parsed);
-                cart.value = parsed.products;
-                return resolve(null);
-            });
-        });
+    async function setCount(id: string, count: number) {
+        await fetchCart();
+        const item = cart.value.find((v) => v.id === id);
+        if (!item) return false;
+
+        item.count = Math.max(1, Math.floor(count || 1));
+
+        return storage.setItem('cart', JSON.stringify({ products: cart.value }));
     }
 
     return {
         cart,
         fetchCart,
         addToCart,
-        removeFromCart
+        removeFromCart,
+        setCount
     };
 });

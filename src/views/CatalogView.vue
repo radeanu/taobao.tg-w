@@ -32,6 +32,7 @@
             class="btn-cart"
             kind="secondary"
             icon-left="cart"
+            @click="goToCart"
         >
             <ShBadge absolute :value="cartStore.cart.length" kind="error" />
         </ShButton>
@@ -40,12 +41,14 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { ShButton, ShSkeleton, ShBadge } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/composables/useCartStorage';
 
+const router = useRouter();
 const cartStore = useCartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
@@ -56,6 +59,10 @@ const showCartButton = computed(() => {
 onMounted(async () => {
     await fetchProductsCatalog();
 });
+
+function goToCart() {
+    router.push('/cart');
+}
 </script>
 
 <style lang="scss" scoped>
