@@ -11,10 +11,8 @@
             <ShIcon name="eye-close" />
         </div>
 
-        <!-- Blurred background -->
         <div ref="wrapperNode" class="image-background container-inherit"></div>
 
-        <!-- Sharp foreground image -->
         <img
             ref="imgNode"
             class="image container-inherit"
@@ -69,9 +67,9 @@ watchEffect(() => {
     if (!imgNode.value || !wrapperNode.value) return;
     imgNode.value.src = imageSrc.value;
 
+    wrapperNode.value.style.filter = 'blur(5px)';
     wrapperNode.value.style.backgroundRepeat = 'no-repeat';
     wrapperNode.value.style.backgroundImage = `url(${imageSrc.value})`;
-    wrapperNode.value.style.filter = 'blur(5px)';
 });
 
 function handleError() {

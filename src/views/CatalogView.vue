@@ -18,14 +18,14 @@
             @click="fetchMore"
         />
 
-        <ShButton class="btn-cart" kind="telegram">
+        <ShButton v-if="showCartButton" class="btn-cart" kind="telegram">
             {{ cartStore.cart.length }}
         </ShButton>
     </main>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import { ShButton } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
@@ -34,6 +34,12 @@ import { useCartStore } from '@/composables/useCartStorage';
 
 const cartStore = useCartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
+
+const showCartButton = computed(() => {
+    return (
+        !loader.isLoading.value && cartStore.cart.length > 0 && products.value.length > 0
+    );
+});
 
 onMounted(async () => {
     await fetchProductsCatalog();
@@ -57,7 +63,7 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 2;
+    z-index: 3;
     padding: 10px 20px;
     text-align: center;
     color: var(--tg-theme-text-color);
