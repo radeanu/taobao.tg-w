@@ -118,14 +118,12 @@ function handleLoad() {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
     background-size: cover;
     background-position: center;
 }
 
 .image {
     position: relative;
-    z-index: 2;
     overflow: hidden;
     object-fit: v-bind(fit);
     object-position: center;

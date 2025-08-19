@@ -6,9 +6,12 @@
 
         <div v-else class="list">
             <div v-for="it in items" :key="it.id" class="row">
-                <div class="row__image">
+                <RouterLink
+                    :to="{ name: 'product', params: { id: it.id } }"
+                    class="row__image"
+                >
                     <ShImage :src="it.image?.thumbnails?.large?.url || it.image?.url" />
-                </div>
+                </RouterLink>
 
                 <div class="row__body">
                     <div class="row__title">Артикул: {{ it.article }}</div>
@@ -101,6 +104,13 @@ function submit() {
     height: 90px;
     border-radius: var(--border-radius);
     overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    text-decoration: none;
+
+    &:hover {
+        opacity: 0.8;
+    }
 }
 
 .row__body {

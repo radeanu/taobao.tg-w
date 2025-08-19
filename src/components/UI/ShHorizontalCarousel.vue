@@ -68,7 +68,6 @@ function scroll(direction: 'left' | 'right') {
     padding: 10px 8px;
     cursor: pointer;
     height: 100%;
-    z-index: 1;
     transition: background-color 0.2s;
     color: var(--tg-text-color, var(--color-black));
 
