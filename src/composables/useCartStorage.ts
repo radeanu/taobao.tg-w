@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watchEffect } from 'vue';
 
 import type { CartItem } from '@/common/types';
 
-export const cartStore = defineStore('cart', () => {
+export const useCartStore = defineStore('cart', () => {
     const app = window.Telegram.WebApp;
     const user = app.initDataUnsafe.user;
     const storage = app.CloudStorage;

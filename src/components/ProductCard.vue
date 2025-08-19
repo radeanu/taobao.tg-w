@@ -10,7 +10,7 @@
             kind="telegram"
             full-width
             class="btn-buy"
-            @click="removeFromCart(product.id)"
+            @click="cartStore.removeFromCart(product.id)"
         />
 
         <ShButton
@@ -19,7 +19,7 @@
             kind="secondary"
             full-width
             class="btn-buy"
-            @click="addToCart(product.id)"
+            @click="cartStore.addToCart(product.id)"
         />
     </div>
 </template>
@@ -29,16 +29,16 @@ import { computed } from 'vue';
 
 import type { Product } from '@/common/types';
 import { ShImage, ShButton } from '@/components/UI';
-import { cartStore } from '@/composables/useCartStorage';
+import { useCartStore } from '@/composables/useCartStorage';
 
 const props = defineProps<{
     product: Product;
 }>();
 
-const { cart, addToCart, removeFromCart } = cartStore();
+const cartStore = useCartStore();
 
 const isInCart = computed(() => {
-    return cart.some((p) => p.id === props.product.id);
+    return cartStore.cart.some((p) => p.id === props.product.id);
 });
 </script>
 

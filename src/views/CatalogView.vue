@@ -18,10 +18,10 @@
             @click="fetchMore"
         />
 
-        <pre>{{ cart }}</pre>
+        <pre>{{ cartStore.cart }}</pre>
 
         <ShButton class="btn-cart" kind="telegram">
-            {{ cart.length }}
+            {{ cartStore.cartLength }}
         </ShButton>
     </main>
 </template>
@@ -32,14 +32,13 @@ import { onMounted } from 'vue';
 import { ShButton } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
-import { cartStore } from '@/composables/useCartStorage';
+import { useCartStore } from '@/composables/useCartStorage';
 
-const { cart, fetchCart } = cartStore();
+const cartStore = useCartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 onMounted(async () => {
     await fetchProductsCatalog();
-    await fetchCart();
 });
 </script>
 
