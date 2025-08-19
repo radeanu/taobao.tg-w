@@ -13,3 +13,13 @@ app.use(router);
 app.use(pinia);
 
 app.mount('#app');
+
+// Set page title with app version
+try {
+    const baseTitle = document.title || 'Таобао';
+    if (typeof APP_VERSION === 'string' && APP_VERSION) {
+        document.title = `${baseTitle} v${APP_VERSION}`;
+    }
+} catch (_) {
+    // noop
+}
