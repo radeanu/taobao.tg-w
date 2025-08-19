@@ -1,12 +1,14 @@
 <template>
     <div class="product">
-        <ShImage :src="product.image?.thumbnails?.large?.url" class="image" lazy />
+        <RouterLink :to="{ name: 'product', params: { id: product.id } }">
+            <ShImage :src="product.image?.thumbnails?.large?.url" class="image" lazy />
+        </RouterLink>
 
         <p class="price">{{ product.priceRub }} ₽</p>
 
         <ShButton
             v-if="isInCart"
-            label="В корзине"
+            label="Убрать"
             kind="telegram"
             full-width
             class="btn-buy"
