@@ -18,8 +18,6 @@
             @click="fetchMore"
         />
 
-        <pre>{{ cartStore.cart.length }}</pre>
-
         <ShButton v-if="showCartButton" class="btn-cart" kind="telegram">
             {{ cartStore.cart.length }}
         </ShButton>
@@ -58,6 +56,7 @@ main {
     bottom: 20px;
     right: 0;
     margin-left: auto;
+    z-index: 10;
 }
 
 .loading {
