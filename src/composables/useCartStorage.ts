@@ -1,5 +1,5 @@
-import { onMounted, ref, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 
 import type { CartItem } from '@/common/types';
 
@@ -13,6 +13,10 @@ export const cartStore = defineStore('cart', () => {
 
     watchEffect(() => {
         console.log(JSON.parse(JSON.stringify(cart.value)));
+    });
+
+    const cartLength = computed(() => {
+        return cart.value.length;
     });
 
     onMounted(async () => {
@@ -72,6 +76,7 @@ export const cartStore = defineStore('cart', () => {
         cart,
         fetchCart,
         addToCart,
+        cartLength,
         removeFromCart
     };
 });

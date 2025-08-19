@@ -18,6 +18,8 @@
             @click="fetchMore"
         />
 
+        <pre>{{ cart }}</pre>
+
         <ShButton class="btn-cart" kind="telegram">
             {{ cart.length }}
         </ShButton>
@@ -32,11 +34,12 @@ import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 import { cartStore } from '@/composables/useCartStorage';
 
-const { cart } = cartStore();
+const { cart, fetchCart } = cartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 onMounted(async () => {
     await fetchProductsCatalog();
+    await fetchCart();
 });
 </script>
 
