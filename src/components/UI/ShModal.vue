@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { onBeforeMount, onBeforeUnmount, ref, useTemplateRef } from 'vue';
 
-import { ShButton } from '@UI';
+import ShButton from './ShButton.vue';
 
 export type ShModalT = {
     closeOnBlur?: boolean;

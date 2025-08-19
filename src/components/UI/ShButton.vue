@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ShIcon } from '@UI';
+import ShIcon from './ShIcon.vue';
 
 export type ShButtonT = {
     label?: string;

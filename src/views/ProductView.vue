@@ -39,17 +39,14 @@
 
                 <ShHorizontalCarousel :items="product.colors">
                     <template #default="{ item }">
-                        <RouterLink
-                            :to="{ name: 'product', params: { id: item.product } }"
-                            class="color-item"
-                        >
+                        <div class="color-item">
                             <ShImage
                                 lazy
                                 class="color-image"
                                 :src="item.image?.thumbnails?.large?.url"
                             />
                             <span>{{ item.name }}</span>
-                        </RouterLink>
+                        </div>
                     </template>
                 </ShHorizontalCarousel>
             </div>
@@ -74,15 +71,15 @@
 import { computed } from 'vue';
 
 import { PRODUCT_MAP } from '@/common/model';
-import { useProductPage } from '@/composables/useProductPage';
 import { useCartStore } from '@/composables/useCartStorage';
+import { useProductPage } from '@/composables/useProductPage';
 
 import {
     ShImage,
-    ShHorizontalCarousel,
     ShChip,
     ShButton,
-    ShSkeleton
+    ShSkeleton,
+    ShHorizontalCarousel
 } from '@/components/UI';
 import CartButton from '@/components/CartButton.vue';
 

@@ -36,7 +36,7 @@
 <script setup lang="ts" generic="T">
 import { ref, useTemplateRef } from 'vue';
 
-import { ShButton } from '@/components/UI';
+import ShButton from './ShButton.vue';
 
 defineProps<{ items: T[] }>();
 

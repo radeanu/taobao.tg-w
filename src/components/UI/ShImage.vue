@@ -39,7 +39,6 @@
 import { ref, useTemplateRef, watchEffect } from 'vue';
 
 import ShIcon from './ShIcon.vue';
-import ShImage from './ShImage.vue';
 import ShModal from './ShModal.vue';
 import ShSkeleton from './ShSkeleton.vue';
 
