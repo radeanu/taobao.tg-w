@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 
-import { ShButton, ShSkeleton, ShBadge, ShIcon } from '@UI';
+import { ShButton, ShSkeleton, ShBadge } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/composables/useCartStorage';
@@ -47,7 +47,9 @@ const cartStore = useCartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 const showCartButton = computed(() => {
-    return !loader.isLoading.value;
+    return (
+        !loader.isLoading.value && cartStore.cart.length > 0 && products.value.length > 0
+    );
 });
 
 onMounted(async () => {
