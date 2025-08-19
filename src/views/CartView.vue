@@ -45,22 +45,21 @@
 </template>
 
 <script setup lang="ts">
-import { ShButton, ShImage } from '@UI';
-import { useCartPage } from '@/composables/useCartPage';
 import { useRouter } from 'vue-router';
 
+import { ShButton, ShImage } from '@UI';
+import { useCartPage } from '@/composables/useCartPage';
+
+const app = window.Telegram.WebApp;
+
 const router = useRouter();
-const {
-    loader,
-    items,
-    counts,
-    totalPrice,
-    fetchCartProducts,
-    increment,
-    decrement,
-    onCountChange,
-    remove
-} = useCartPage();
+const { loader, items, counts, totalPrice, increment, decrement, onCountChange, remove } =
+    useCartPage();
+
+app.BackButton.show();
+app.BackButton.onClick(() => {
+    router.push('/');
+});
 
 function submit() {
     router.push('/success');
