@@ -7,7 +7,7 @@
         <div v-else class="list">
             <div v-for="it in items" :key="it.id" class="row">
                 <div class="row__image">
-                    <ShImage :src="it.image?.thumbnails?.small?.url || it.image?.url" />
+                    <ShImage :src="it.image?.thumbnails?.large?.url || it.image?.url" />
                 </div>
 
                 <div class="row__body">
@@ -131,6 +131,20 @@ function submit() {
     border-radius: var(--border-radius-s);
 }
 
+/* Hide default number input spinners (Chrome, Safari, Edge) */
+.row__count::-webkit-outer-spin-button,
+.row__count::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+/* Hide default number input spinners (Firefox) */
+.row__count {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .row__remove {
     margin-left: auto;
     color: var(--color-red);
@@ -144,6 +158,7 @@ function submit() {
     grid-template-columns: 1fr;
     padding-top: 12px;
     background: var(--tg-theme-bg-color, var(--color-white));
+    z-index: 3;
 }
 
 .total {
