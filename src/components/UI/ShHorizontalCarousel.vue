@@ -60,7 +60,6 @@ function scroll(direction: 'left' | 'right') {
     border: 1px solid var(--tg-button-color, var(--color-grey4));
     border-radius: 8px;
     overflow: hidden;
-    background-color: var(--tg-bg-color, var(--color-white));
 }
 
 .carousel-btn {
