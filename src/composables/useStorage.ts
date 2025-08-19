@@ -6,13 +6,13 @@ export function useStorage() {
     const isTelegram = Boolean(userId && tgStorage);
 
     function getItem(key: string): Promise<string | null> {
-        console.log({ isTelegram });
-
         if (isTelegram) {
-            const namespacedKey = `${userId}:${key}`;
             return new Promise((resolve) => {
-                tgStorage.getItem(namespacedKey, (error, value) => {
-                    if (error) return resolve(null);
+                tgStorage.getItem(key, (error, value) => {
+                    if (error) {
+                        console.log(error);
+                        return resolve(null);
+                    }
                     resolve(value ?? null);
                 });
             });
@@ -27,12 +27,9 @@ export function useStorage() {
     }
 
     function setItem(key: string, value: string): Promise<boolean> {
-        console.log({ isTelegram });
-
         if (isTelegram) {
-            const namespacedKey = `${userId}:${key}`;
             return new Promise((resolve) => {
-                tgStorage.setItem(namespacedKey, value, (error, success) => {
+                tgStorage.setItem(key, value, (error, success) => {
                     resolve(!error && !!success);
                 });
             });

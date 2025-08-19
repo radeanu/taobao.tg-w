@@ -38,7 +38,10 @@
 <script setup lang="ts">
 import { ref, useTemplateRef, watchEffect } from 'vue';
 
-import { ShIcon, ShImage, ShSkeleton, ShModal } from '@UI';
+import ShIcon from './ShIcon.vue';
+import ShImage from './ShImage.vue';
+import ShModal from './ShModal.vue';
+import ShSkeleton from './ShSkeleton.vue';
 
 export type ShImageT = {
     src?: string;
