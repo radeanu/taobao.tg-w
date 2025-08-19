@@ -1,9 +1,18 @@
 <template>
     <main>
-        <div v-if="loader.isLoading.value" class="loading">Загрузка...</div>
+        <div v-if="loader.isLoading.value && products.length === 0" class="loading">
+            Загрузка...
+        </div>
 
         <div class="products">
             <ProductCard v-for="item in products" :key="item.id" :product="item" />
+
+            <!-- Skeleton loading for load more -->
+            <template v-if="loader.isLoading.value && products.length > 0">
+                <div v-for="i in 2" :key="`skeleton-${i}`" class="product-skeleton">
+                    <ShSkeleton />
+                </div>
+            </template>
         </div>
 
         <ShButton
@@ -27,7 +36,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 
-import { ShButton } from '@UI';
+import { ShButton, ShSkeleton } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/composables/useCartStorage';
@@ -85,5 +94,11 @@ main {
     &.btn-hidden {
         visibility: hidden;
     }
+}
+
+.product-skeleton {
+    width: 100%;
+    height: 300px;
+    border-radius: var(--border-radius-m);
 }
 </style>
