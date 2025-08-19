@@ -18,6 +18,8 @@
             @click="fetchMore"
         />
 
+        <pre>{{ cartStore.cart.length }}</pre>
+
         <ShButton v-if="showCartButton" class="btn-cart" kind="telegram">
             {{ cartStore.cart.length }}
         </ShButton>
