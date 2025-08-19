@@ -107,5 +107,7 @@ const btnClasses = computed(() => {
     color: var(--tg-theme-button-text-color, var(--color-white));
     border-color: var(--tg-theme-button-color, var(--color-grey));
     background-color: var(--tg-theme-button-color, var(--color-grey));
+
+    --icon-color: var(--tg-theme-button-text-color, var(--color-white));
 }
 </style>

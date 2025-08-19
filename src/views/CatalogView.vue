@@ -27,8 +27,10 @@
             @click="fetchMore"
         />
 
-        <ShButton v-if="showCartButton" class="btn-cart" kind="telegram">
-            {{ cartStore.cart.length }}
+        <ShButton v-if="showCartButton" class="btn-cart" kind="telegram" icon-left="cart">
+            <ShBadge kind="error" rounded class="cart-badge">
+                {{ cartStore.cart.length }}
+            </ShBadge>
         </ShButton>
     </main>
 </template>
@@ -36,7 +38,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 
-import { ShButton, ShSkeleton } from '@UI';
+import { ShButton, ShSkeleton, ShBadge, ShIcon } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/composables/useCartStorage';
@@ -45,9 +47,7 @@ const cartStore = useCartStore();
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 const showCartButton = computed(() => {
-    return (
-        !loader.isLoading.value && cartStore.cart.length > 0 && products.value.length > 0
-    );
+    return !loader.isLoading.value;
 });
 
 onMounted(async () => {
@@ -66,6 +66,7 @@ main {
     right: 0;
     margin-left: auto;
     z-index: 10;
+    overflow: unset;
 }
 
 .loading {
