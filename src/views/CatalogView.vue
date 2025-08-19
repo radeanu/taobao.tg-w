@@ -33,9 +33,7 @@
             kind="secondary"
             icon-left="cart"
         >
-            <ShBadge kind="error" rounded class="cart-badge">
-                {{ cartStore.cart.length }}
-            </ShBadge>
+            <ShBadge absolute :value="cartStore.cart.length" kind="error" />
         </ShButton>
     </main>
 </template>
