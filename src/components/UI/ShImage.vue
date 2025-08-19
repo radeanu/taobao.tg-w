@@ -1,5 +1,5 @@
 <template>
-    <picture ref="wrapperNode" class="app-image container-inherit" role="none">
+    <div class="app-image container-inherit" role="none">
         <ShSkeleton v-if="!imageLoaded" />
 
         <div
@@ -11,6 +11,10 @@
             <ShIcon name="eye-close" />
         </div>
 
+        <!-- Blurred background -->
+        <div ref="wrapperNode" class="image-background container-inherit"></div>
+
+        <!-- Sharp foreground image -->
         <img
             ref="imgNode"
             class="image container-inherit"
@@ -30,7 +34,7 @@
                 />
             </div>
         </ShModal>
-    </picture>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -65,9 +69,9 @@ watchEffect(() => {
     if (!imgNode.value || !wrapperNode.value) return;
     imgNode.value.src = imageSrc.value;
 
-    imgNode.value.style.backdropFilter = 'blur(5px)';
     wrapperNode.value.style.backgroundRepeat = 'no-repeat';
     wrapperNode.value.style.backgroundImage = `url(${imageSrc.value})`;
+    wrapperNode.value.style.filter = 'blur(5px)';
 });
 
 function handleError() {
@@ -110,7 +114,18 @@ function handleLoad() {
     border-radius: inherit;
 }
 
+.image-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-size: cover;
+    background-position: center;
+}
+
 .image {
+    position: relative;
+    z-index: 2;
     overflow: hidden;
     object-fit: v-bind(fit);
     object-position: center;

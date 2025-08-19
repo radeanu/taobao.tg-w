@@ -15,10 +15,6 @@ export const useCartStore = defineStore('cart', () => {
         console.log(JSON.parse(JSON.stringify(cart.value)));
     });
 
-    const cartLength = computed(() => {
-        return cart.value.length;
-    });
-
     onMounted(async () => {
         await fetchCart();
     });
@@ -76,7 +72,6 @@ export const useCartStore = defineStore('cart', () => {
         cart,
         fetchCart,
         addToCart,
-        cartLength,
         removeFromCart
     };
 });

@@ -18,10 +18,8 @@
             @click="fetchMore"
         />
 
-        <pre>{{ cartStore.cart }}</pre>
-
         <ShButton class="btn-cart" kind="telegram">
-            {{ cartStore.cartLength }}
+            {{ cartStore.cart.length }}
         </ShButton>
     </main>
 </template>
