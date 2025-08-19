@@ -12,7 +12,7 @@ export function useProductPage() {
 
     const product = ref<Product | null>(null);
     const selectedSize = ref<string | null>(null);
-    const colors: { [key: string]: { name: string; product: string } } = {};
+    const colors: { [key: string]: string } = {};
     const sizes: { [key: string]: string } = {};
 
     watch(
@@ -36,8 +36,7 @@ export function useProductPage() {
             return {
                 id: cId,
                 image: product.colorsPhoto?.[idx] ?? null,
-                name: colors[cId as keyof typeof colors].name ?? '-',
-                product: colors[cId as keyof typeof colors].product ?? null
+                name: colors[cId as keyof typeof colors] ?? '-'
             };
         });
 
@@ -65,7 +64,7 @@ export function useProductPage() {
         try {
             for (let i = 0; i < Object.keys(colors).length; i += 100) {
                 const batch = Object.entries(colors)
-                    .filter(([_, color]) => !color.name.length)
+                    .filter(([_, color]) => !color)
                     .map(([id]) => id)
                     .slice(i, i + 100);
 
@@ -80,12 +79,7 @@ export function useProductPage() {
                 const records = res.data?.records ?? [];
 
                 records.forEach((r: AirRecord) => {
-                    const ids = r.fields?.product_id as string[];
-
-                    colors[r.id] = {
-                        product: ids?.[0] ?? null,
-                        name: r.fields[COLOR_MAP.name] as string
-                    };
+                    colors[r.id] = r.fields[COLOR_MAP.name] as string;
                 });
             }
         } catch (error) {
@@ -129,7 +123,7 @@ export function useProductPage() {
             const colorsL = (record.fields[PRODUCT_MAP.colors] ?? []) as string[];
             const sizesL = (record.fields[PRODUCT_MAP.sizes] ?? []) as string[];
 
-            colorsL.forEach((v) => (colors[v] = { name: '', product: '' }));
+            colorsL.forEach((v) => (colors[v] = ''));
             sizesL.forEach((v) => (sizes[v] = ''));
 
             await _fetchColors();

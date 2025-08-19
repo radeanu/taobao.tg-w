@@ -2,7 +2,7 @@
     <main>
         <ShSkeleton v-if="loader.isLoading.value" class="skeleton" />
 
-        <div v-if="product" class="product">
+        <div v-else-if="product" class="product">
             <ShImage
                 :src="product.image?.thumbnails?.large?.url"
                 class="main-product-image"
