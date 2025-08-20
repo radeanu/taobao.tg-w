@@ -1,45 +1,39 @@
+import { useRouter } from 'vue-router';
 import { computed, onMounted, ref } from 'vue';
 
-import { productApi } from '@/composables/useAirtable';
 import { PRODUCT_MAP } from '@/common/model';
-import type { CartProduct, AirRecord } from '@/common/types';
+import { useLoading } from '@/composables/useLoading';
+import { productApi } from '@/composables/useAirtable';
 import { useCartStore } from '@/composables/useCartStorage';
+import type { CartProduct, AirRecord } from '@/common/types';
+import { useCreateOrder } from '@/composables/useCreateOrder';
 
 export function useCartPage() {
+    const loader = useLoading();
+    const router = useRouter();
     const cartStore = useCartStore();
+    const createOrder = useCreateOrder();
 
     const items = ref<CartProduct[]>([]);
-    const counts = ref<Record<string, number>>({});
-    const loader = ref<boolean>(false);
+    const error = ref<string | null>(null);
 
     const totalPrice = computed(() => {
         return items.value.reduce((acc, p) => {
-            const c = counts.value[p.id] ?? 1;
-            return acc + p.priceRub * c;
+            return acc + p.priceRub * p.count;
         }, 0);
     });
 
     onMounted(async () => {
+        await cartStore.fetchCart();
         await fetchCartProducts();
     });
 
     async function fetchCartProducts() {
         const ids = cartStore.cart.map((c) => c.id);
-        counts.value = cartStore.cart.reduce(
-            (acc, c) => {
-                acc[c.id] = c.count;
-                return acc;
-            },
-            {} as Record<string, number>
-        );
-
-        if (!ids.length) {
-            items.value = [];
-            return;
-        }
+        if (!ids.length) return;
 
         try {
-            loader.value = true;
+            loader.start();
             const res = await productApi.get('/', {
                 params: {
                     fields: [
@@ -56,8 +50,11 @@ export function useCartPage() {
 
             const records = (res.data?.records ?? []) as AirRecord[];
             items.value = records.map((r) => {
+                const cartItem = cartStore.cart.find((c) => c.id === r.id);
+
                 return {
                     id: r.id,
+                    count: cartItem?.count ?? 1,
                     article: (r.fields as any)[PRODUCT_MAP.article] as number,
                     priceRub: (r.fields as any)[PRODUCT_MAP.priceRub] as number,
                     image: ((r.fields as any)[PRODUCT_MAP.image] ?? [])[0] ?? null
@@ -66,27 +63,26 @@ export function useCartPage() {
         } catch (e) {
             console.log(e);
         } finally {
-            loader.value = false;
+            loader.end();
         }
     }
 
     async function increment(id: string) {
-        const next = (counts.value[id] ?? 1) + 1;
-        counts.value[id] = next;
-        await cartStore.setCount(id, next);
+        const targetIdx = items.value.findIndex((i) => i.id === id);
+        if (targetIdx === -1) return;
+
+        const newCount = items.value[targetIdx].count + 1;
+        items.value[targetIdx].count = newCount;
+        await cartStore.setCount(id, newCount);
     }
 
     async function decrement(id: string) {
-        const next = Math.max(1, (counts.value[id] ?? 1) - 1);
-        counts.value[id] = next;
-        await cartStore.setCount(id, next);
-    }
+        const targetIdx = items.value.findIndex((i) => i.id === id);
+        if (targetIdx === -1) return;
 
-    async function onCountChange(id: string, ev: Event) {
-        const v = Number((ev.target as HTMLInputElement).value || '1');
-        const next = Math.max(1, Math.floor(v));
-        counts.value[id] = next;
-        await cartStore.setCount(id, next);
+        const newCount = Math.max(1, items.value[targetIdx].count - 1);
+        items.value[targetIdx].count = newCount;
+        await cartStore.setCount(id, newCount);
     }
 
     async function remove(id: string) {
@@ -94,15 +90,37 @@ export function useCartPage() {
         await fetchCartProducts();
     }
 
+    async function submit() {
+        try {
+            error.value = null;
+            loader.start();
+
+            const result = await createOrder.createOrder(items.value);
+
+            if (!result.success) {
+                error.value = result.message;
+                return;
+            }
+
+            await cartStore.clearCart();
+            router.push('/success');
+        } catch (e) {
+            console.log(e);
+            error.value = 'Ошибка при создании заказа. Попробуйте еще раз.';
+        } finally {
+            loader.end();
+        }
+    }
+
     return {
-        loader,
         items,
-        counts,
-        totalPrice,
-        fetchCartProducts,
-        increment,
+        loader,
+        error,
+        remove,
+        submit,
         decrement,
-        onCountChange,
-        remove
+        increment,
+        totalPrice,
+        fetchCartProducts
     };
 }

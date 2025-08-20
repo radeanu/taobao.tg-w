@@ -55,11 +55,17 @@ export const useCartStore = defineStore('cart', () => {
         return storage.setItem('cart', JSON.stringify({ products: cart.value }));
     }
 
+    async function clearCart() {
+        cart.value = [];
+        return storage.setItem('cart', JSON.stringify({ products: [] }));
+    }
+
     return {
         cart,
+        setCount,
         fetchCart,
         addToCart,
         removeFromCart,
-        setCount
+        clearCart
     };
 });

@@ -19,3 +19,20 @@ export const SIZE_MAP = {
     name: 'Размер Китайский',
     product: 'Продукт'
 };
+
+export const ORDER_MAP = {
+    id: 'Номер заказа',
+    positions: 'Позиции',
+    clients: 'Клиенты'
+};
+
+export const POSITION_MAP = {
+    products: 'Товары (Таблица)',
+    count: 'Кол-во',
+    color: 'Цвета (Таблица)'
+};
+
+export const CLIENT_MAP = {
+    name: 'ФИО',
+    tg_id: 'Телеграм'
+};

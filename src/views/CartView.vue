@@ -2,76 +2,93 @@
     <main class="cart">
         <h2 class="title">Корзина</h2>
 
-        <div v-if="items.length === 0 && !loader" class="empty">В корзине пока пусто</div>
+        <ShSkeleton v-if="loader.isLoading.value" class="skeleton" />
 
-        <div v-else class="list">
-            <div v-for="it in items" :key="it.id" class="row">
-                <RouterLink
-                    :to="{ name: 'product', params: { id: it.id } }"
-                    class="row__image"
-                >
-                    <ShImage :src="it.image?.thumbnails?.large?.url || it.image?.url" />
-                </RouterLink>
+        <template v-else>
+            <div v-if="items.length === 0" class="empty">В корзине пока пусто</div>
 
-                <div class="row__body">
-                    <div class="row__title">Артикул: {{ it.article }}</div>
-                    <div class="row__price">{{ it.priceRub }} ₽</div>
-
-                    <div class="row__controls">
-                        <ShButton kind="secondary" @click="decrement(it.id)">-</ShButton>
-                        <input
-                            class="row__count"
-                            type="number"
-                            :value="counts[it.id] || 1"
-                            min="1"
-                            @change="onCountChange(it.id, $event)"
+            <div v-else class="list">
+                <div v-for="it in items" :key="it.id" class="row">
+                    <RouterLink
+                        :to="{ name: 'product', params: { id: it.id } }"
+                        class="row__image"
+                    >
+                        <ShImage
+                            :src="it.image?.thumbnails?.large?.url || it.image?.url"
                         />
-                        <ShButton kind="secondary" @click="increment(it.id)">+</ShButton>
+                    </RouterLink>
 
-                        <ShButton
-                            kind="unstyled"
-                            class="row__remove"
-                            @click="remove(it.id)"
-                        >
-                            Удалить
-                        </ShButton>
+                    <div class="row__body">
+                        <div class="row__title">Артикул: {{ it.article }}</div>
+                        <div class="row__price">{{ it.priceRub }} ₽</div>
+
+                        <div class="row__controls">
+                            <ShButton kind="secondary" @click="decrement(it.id)"
+                                >-</ShButton
+                            >
+                            <input
+                                class="row__count"
+                                type="number"
+                                :value="it.count"
+                                min="1"
+                            />
+                            <ShButton kind="secondary" @click="increment(it.id)"
+                                >+</ShButton
+                            >
+
+                            <ShButton
+                                kind="unstyled"
+                                class="row__remove"
+                                @click="remove(it.id)"
+                            >
+                                Удалить
+                            </ShButton>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div v-if="items.length" class="footer">
-            <div class="total">Итого: {{ totalPrice }} ₽</div>
-            <ShButton kind="telegram" full-width @click="submit">Оформить</ShButton>
-        </div>
+            <div v-if="items.length" class="footer">
+                <div v-if="error" class="error-message">
+                    <div class="error-text">{{ error }}</div>
+                    <ShButton kind="unstyled" class="error-close" @click="error = null">
+                        ✕
+                    </ShButton>
+                </div>
+                <div class="total">Итого: {{ totalPrice }} ₽</div>
+                <ShButton kind="telegram" full-width @click="submit">Оформить</ShButton>
+            </div>
+        </template>
     </main>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 
-import { ShButton, ShImage } from '@UI';
+import { ShButton, ShImage, ShSkeleton } from '@UI';
 import { useCartPage } from '@/composables/useCartPage';
 
 const app = window.Telegram.WebApp;
 
 const router = useRouter();
-const { loader, items, counts, totalPrice, increment, decrement, onCountChange, remove } =
+const { loader, items, totalPrice, increment, decrement, remove, submit, error } =
     useCartPage();
 
 app.BackButton.show();
 app.BackButton.onClick(() => {
     router.push('/');
 });
-
-function submit() {
-    router.push('/success');
-}
 </script>
 
 <style scoped lang="scss">
 .cart {
     padding: 20px 8px;
+}
+
+.skeleton {
+    width: 100%;
+    height: 200px;
+    border-radius: var(--border-radius-m);
 }
 
 .title {
@@ -174,5 +191,45 @@ function submit() {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 8px;
+}
+
+.error-message {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: var(--color-red-light, #fee);
+    border: 1px solid var(--color-red, #e53e3e);
+    border-radius: var(--border-radius);
+    color: var(--color-red, #e53e3e);
+}
+
+.error-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.error-close {
+    margin-left: 8px;
+    padding: 4px;
+    font-size: 16px;
+    color: var(--color-red, #e53e3e);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background: var(--color-red, #e53e3e);
+        color: white;
+    }
 }
 </style>

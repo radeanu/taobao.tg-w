@@ -80,7 +80,13 @@ export type CartItem = {
 
 export type CartProduct = {
     id: string;
+    count: number;
     article: number;
     priceRub: number;
     image: AirImage | null;
+};
+
+export type ClientInfo = {
+    name: string;
+    tg_id: number;
 };

@@ -6,6 +6,9 @@ const airBase = import.meta.env.VITE_AIR_BASE;
 const airSizeTable = import.meta.env.VITE_AIR_SIZES_TABLE;
 const airColorsTable = import.meta.env.VITE_AIR_COLORS_TABLE;
 const airProductsTable = import.meta.env.VITE_AIR_PRODUCTS_TABLE;
+const airOrdersTable = import.meta.env.VITE_AIR_ORDERS_TABLE;
+const airPositionsTable = import.meta.env.VITE_AIR_POSITIONS_TABLE;
+const airClientsTable = import.meta.env.VITE_AIR_CLIENTS_TABLE;
 
 const headers = {
     common: {
@@ -26,4 +29,19 @@ export const sizeApi = axios.create({
 export const colorApi = axios.create({
     headers,
     baseURL: `https://api.airtable.com/v0/${airBase}/${airColorsTable}`
+});
+
+export const orderApi = axios.create({
+    headers,
+    baseURL: `https://api.airtable.com/v0/${airBase}/${airOrdersTable}`
+});
+
+export const positionApi = axios.create({
+    headers,
+    baseURL: `https://api.airtable.com/v0/${airBase}/${airPositionsTable}`
+});
+
+export const clientApi = axios.create({
+    headers,
+    baseURL: `https://api.airtable.com/v0/${airBase}/${airClientsTable}`
 });
