@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 
 import { useProduct } from './useProduct';
 import { useLoading } from '@/composables/useLoading';
+import { useQuerySync } from '@/composables/useQuerySync';
 import { productApi } from '@/composables/useAirtable';
 import type { Product, AirRecord } from '@/common/types';
 
@@ -12,23 +13,18 @@ export function useProductPage() {
     const { parseAirProductToProduct, populateFields } = useProduct();
 
     const product = ref<Product | null>(null);
-    const selectedSize = ref<string | null>(null);
+
+    const { queryVal: selectedSize } = useQuerySync<string | null>('size');
+    const { queryVal: selectedColor } = useQuerySync<string | null>('color');
 
     watch(
         () => route.params.id,
         async (newId) => {
-            if (newId) {
-                await fetchProductById(newId as string);
-            }
+            if (!newId) return;
+            await fetchProductById(newId as string);
         },
         { immediate: true }
     );
-
-    watch(product, (newProduct) => {
-        if (newProduct) {
-            selectedSize.value = newProduct.sizes?.[0]?.id || null;
-        }
-    });
 
     async function fetchProductById(id: string) {
         try {
@@ -48,6 +44,7 @@ export function useProductPage() {
     return {
         loader,
         product,
-        selectedSize
+        selectedSize,
+        selectedColor
     };
 }

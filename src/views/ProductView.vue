@@ -26,7 +26,7 @@
                         v-for="size in product.sizes"
                         :key="size.id"
                         :active="selectedSize === size.id"
-                        @click="selectedSize = size.id"
+                        @click="setSelectedSize(size.id)"
                     >
                         <span>{{ size.name }}</span>
                     </ShChip>
@@ -38,7 +38,11 @@
 
                 <ShHorizontalCarousel :items="product.colors">
                     <template #default="{ item }">
-                        <div class="color-item">
+                        <div
+                            class="color-item"
+                            :class="{ 'color-item--selected': selectedColor === item.id }"
+                            @click="setSelectedColor(item.id)"
+                        >
                             <ShImage
                                 lazy
                                 class="color-image"
@@ -84,7 +88,14 @@ import {
     ShImageSlideshow
 } from '@/components/UI';
 
-const { product, loader, selectedSize } = useProductPage();
+const {
+    product,
+    loader,
+    selectedSize,
+    selectedColor,
+    setSelectedSize,
+    setSelectedColor
+} = useProductPage();
 const cartStore = useCartStore();
 
 const isInCart = computed(() => cartStore.cart.some((p) => p.id === product.value?.id));
@@ -153,6 +164,12 @@ main {
     align-items: center;
     text-align: center;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.color-item--selected {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .color-image {
@@ -161,6 +178,12 @@ main {
     margin-bottom: 5px;
     border-radius: 8px;
     overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.color-item--selected .color-image {
+    border-color: var(--tg-theme-button-color, #007aff);
 }
 
 .product-actions {
