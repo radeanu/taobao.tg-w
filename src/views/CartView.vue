@@ -22,27 +22,53 @@
                         <div class="row__title">Артикул: {{ it.article }}</div>
                         <div class="row__price">{{ it.priceRub }} ₽</div>
 
+                        <div v-if="it.colors?.length" class="row__colors">
+                            <span class="colors-label">Цвета:</span>
+                            <div class="colors-list">
+                                <div
+                                    v-for="color in it.colors"
+                                    :key="color.id"
+                                    class="color-item"
+                                >
+                                    <ShImage
+                                        v-if="color.image"
+                                        :src="
+                                            color.image.thumbnails?.small?.url ||
+                                            color.image.url
+                                        "
+                                        class="color-image"
+                                    />
+                                    <span class="color-name">{{ color.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row__controls">
-                            <ShButton kind="secondary" @click="decrement(it.id)"
-                                >-</ShButton
-                            >
+                            <ShButton
+                                kind="secondary"
+                                @click="updateCount(it.id, it.count - 1)"
+                                label="-"
+                            />
+
                             <input
                                 class="row__count"
                                 type="number"
                                 :value="it.count"
                                 min="1"
                             />
-                            <ShButton kind="secondary" @click="increment(it.id)"
-                                >+</ShButton
-                            >
+
+                            <ShButton
+                                kind="secondary"
+                                @click="updateCount(it.id, it.count + 1)"
+                                label="+"
+                            />
 
                             <ShButton
                                 kind="unstyled"
                                 class="row__remove"
-                                @click="remove(it.id)"
-                            >
-                                Удалить
-                            </ShButton>
+                                @click="updateCount(it.id, 0)"
+                                label="Удалить"
+                            />
                         </div>
                     </div>
                 </div>
@@ -71,8 +97,7 @@ import { useCartPage } from '@/composables/useCartPage';
 const app = window.Telegram.WebApp;
 
 const router = useRouter();
-const { loader, items, totalPrice, increment, decrement, remove, submit, error } =
-    useCartPage();
+const { loader, items, totalPrice, updateCount, submit, error } = useCartPage();
 
 app.BackButton.show();
 app.BackButton.onClick(() => {
@@ -142,6 +167,46 @@ app.BackButton.onClick(() => {
 
 .row__price {
     color: var(--tg-theme-section-header-text-color, var(--color-black));
+}
+
+.row__colors {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.colors-label {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color, var(--color-gray));
+    font-weight: 500;
+}
+
+.colors-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.color-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background: var(--tg-theme-secondary-bg-color, var(--color-gray-light));
+    border-radius: var(--border-radius-s);
+    font-size: 11px;
+}
+
+.color-image {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    object-fit: cover;
+}
+
+.color-name {
+    color: var(--tg-theme-text-color, var(--color-black));
+    font-weight: 500;
 }
 
 .row__controls {

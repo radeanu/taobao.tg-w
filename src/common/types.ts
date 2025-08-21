@@ -30,6 +30,7 @@ export type AirProduct = {
     colorsPhoto: AirImage[];
     colors: string[];
     sizes: string[];
+    images: AirImage[];
 };
 
 export type AirFieldSet = {
@@ -54,6 +55,17 @@ export type AirPagination = {
     limit: number;
 };
 
+export type Color = {
+    id: string;
+    name: string;
+    image: AirImage | null;
+};
+
+export type Size = {
+    id: string;
+    name: string;
+};
+
 export type Product = {
     id: string;
     article: number;
@@ -62,15 +74,9 @@ export type Product = {
     priceRub: number;
     priceCny: number;
     image: AirImage | null;
-    sizes: Array<{
-        id: string;
-        name: string;
-    }>;
-    colors: Array<{
-        id: string;
-        name: string;
-        image: AirImage | null;
-    }>;
+    sizes: Size[];
+    colors: Color[];
+    images: AirImage[];
 };
 
 export type CartItem = {
@@ -78,12 +84,8 @@ export type CartItem = {
     count: number;
 };
 
-export type CartProduct = {
-    id: string;
+export type CartProduct = Product & {
     count: number;
-    article: number;
-    priceRub: number;
-    image: AirImage | null;
 };
 
 export type ClientInfo = {

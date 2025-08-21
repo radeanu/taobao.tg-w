@@ -3,10 +3,9 @@
         <ShSkeleton v-if="loader.isLoading.value" class="skeleton" />
 
         <div v-else-if="product" class="product">
-            <ShImage
-                :src="product.image?.thumbnails?.large?.url"
-                class="main-product-image"
-            />
+            <div class="slideshow-container">
+                <ShImageSlideshow :images="images" />
+            </div>
 
             <div class="product-details">
                 <h1 class="article">{{ product.article }}</h1>
@@ -34,7 +33,7 @@
                 </div>
             </div>
 
-            <div v-if="product.colors?.length" class="carousel-container">
+            <div v-if="product.colors?.length" class="slideshow-container">
                 <h2>{{ PRODUCT_MAP.colors }}</h2>
 
                 <ShHorizontalCarousel :items="product.colors">
@@ -61,6 +60,7 @@
                             : cartStore.addToCart(product.id)
                     "
                 />
+
                 <CartButton />
             </div>
         </div>
@@ -71,22 +71,28 @@
 import { computed } from 'vue';
 
 import { PRODUCT_MAP } from '@/common/model';
+import type { AirImage } from '@/common/types';
+import CartButton from '@/components/CartButton.vue';
 import { useCartStore } from '@/composables/useCartStorage';
 import { useProductPage } from '@/composables/useProductPage';
-
 import {
     ShImage,
     ShChip,
     ShButton,
     ShSkeleton,
-    ShHorizontalCarousel
+    ShHorizontalCarousel,
+    ShImageSlideshow
 } from '@/components/UI';
-import CartButton from '@/components/CartButton.vue';
 
 const { product, loader, selectedSize } = useProductPage();
 const cartStore = useCartStore();
 
 const isInCart = computed(() => cartStore.cart.some((p) => p.id === product.value?.id));
+const images = computed(() => {
+    return [product.value?.image, ...(product.value?.images ?? [])].filter(
+        Boolean
+    ) as AirImage[];
+});
 </script>
 
 <style lang="scss" scoped>
@@ -126,7 +132,7 @@ main {
     margin-bottom: 10px;
 }
 
-.carousel-container {
+.slideshow-container {
     margin-bottom: 20px;
 }
 

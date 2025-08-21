@@ -7,7 +7,8 @@ export const PRODUCT_MAP = {
     colors: 'Цвета',
     priceRub: 'Цена Итого Рубли',
     priceCny: 'Цена Итого Юани',
-    sizes: 'Размеры (Таблица)'
+    sizes: 'Размеры (Таблица)',
+    images: 'Дополнительные фото'
 };
 
 export const COLOR_MAP = {

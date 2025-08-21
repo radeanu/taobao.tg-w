@@ -13,15 +13,13 @@ export const useCartStore = defineStore('cart', () => {
         await fetchCart();
     });
 
-    async function addToCart(id: string): Promise<boolean> {
+    async function addToCart(id: string) {
         await fetchCart();
 
         const existing = cart.value.find((v) => v.id === id);
-        if (existing) {
-            existing.count += 1;
-        } else {
-            cart.value.push({ id, count: 1 });
-        }
+        if (existing) return;
+
+        cart.value.push({ id, count: 1 });
 
         return storage.setItem('cart', JSON.stringify({ products: cart.value }));
     }
@@ -50,9 +48,12 @@ export const useCartStore = defineStore('cart', () => {
         const item = cart.value.find((v) => v.id === id);
         if (!item) return false;
 
-        item.count = Math.max(1, Math.floor(count || 1));
+        item.count = count;
 
-        return storage.setItem('cart', JSON.stringify({ products: cart.value }));
+        return storage.setItem(
+            'cart',
+            JSON.stringify({ products: cart.value.filter((v) => v.count > 0) })
+        );
     }
 
     async function clearCart() {

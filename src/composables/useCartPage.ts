@@ -1,6 +1,7 @@
 import { useRouter } from 'vue-router';
 import { computed, onMounted, ref } from 'vue';
 
+import { useProduct } from './useProduct';
 import { PRODUCT_MAP } from '@/common/model';
 import { useLoading } from '@/composables/useLoading';
 import { productApi } from '@/composables/useAirtable';
@@ -13,6 +14,7 @@ export function useCartPage() {
     const router = useRouter();
     const cartStore = useCartStore();
     const createOrder = useCreateOrder();
+    const { parseAirProductToProduct, populateFields } = useProduct();
 
     const items = ref<CartProduct[]>([]);
     const error = ref<string | null>(null);
@@ -36,11 +38,7 @@ export function useCartPage() {
             loader.start();
             const res = await productApi.get('/', {
                 params: {
-                    fields: [
-                        PRODUCT_MAP.article,
-                        PRODUCT_MAP.priceRub,
-                        PRODUCT_MAP.image
-                    ],
+                    fields: Object.values(PRODUCT_MAP),
                     filterByFormula: `OR(${ids
                         .map((id) => `RECORD_ID() = '${id}'`)
                         .join(',')})`,
@@ -49,16 +47,17 @@ export function useCartPage() {
             });
 
             const records = (res.data?.records ?? []) as AirRecord[];
-            items.value = records.map((r) => {
+
+            await populateFields(records);
+
+            items.value = records.map((r: AirRecord) => {
                 const cartItem = cartStore.cart.find((c) => c.id === r.id);
+                const parsedProduct = parseAirProductToProduct(r);
 
                 return {
-                    id: r.id,
-                    count: cartItem?.count ?? 1,
-                    article: (r.fields as any)[PRODUCT_MAP.article] as number,
-                    priceRub: (r.fields as any)[PRODUCT_MAP.priceRub] as number,
-                    image: ((r.fields as any)[PRODUCT_MAP.image] ?? [])[0] ?? null
-                } as CartProduct;
+                    ...parsedProduct,
+                    count: cartItem?.count ?? 1
+                };
             });
         } catch (e) {
             console.log(e);
@@ -67,27 +66,16 @@ export function useCartPage() {
         }
     }
 
-    async function increment(id: string) {
+    async function updateCount(id: string, count: number) {
         const targetIdx = items.value.findIndex((i) => i.id === id);
         if (targetIdx === -1) return;
 
-        const newCount = items.value[targetIdx].count + 1;
-        items.value[targetIdx].count = newCount;
-        await cartStore.setCount(id, newCount);
-    }
+        await cartStore.setCount(id, count);
+        items.value[targetIdx].count = count;
 
-    async function decrement(id: string) {
-        const targetIdx = items.value.findIndex((i) => i.id === id);
-        if (targetIdx === -1) return;
-
-        const newCount = Math.max(1, items.value[targetIdx].count - 1);
-        items.value[targetIdx].count = newCount;
-        await cartStore.setCount(id, newCount);
-    }
-
-    async function remove(id: string) {
-        await cartStore.removeFromCart(id);
-        await fetchCartProducts();
+        if (count === 0) {
+            items.value.splice(targetIdx, 1);
+        }
     }
 
     async function submit() {
@@ -116,11 +104,9 @@ export function useCartPage() {
         items,
         loader,
         error,
-        remove,
         submit,
-        decrement,
-        increment,
         totalPrice,
+        updateCount,
         fetchCartProducts
     };
 }

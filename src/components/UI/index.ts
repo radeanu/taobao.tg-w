@@ -6,3 +6,4 @@ export { default as ShModal } from './ShModal.vue';
 export { default as ShButton } from './ShButton.vue';
 export { default as ShSkeleton } from './ShSkeleton.vue';
 export { default as ShHorizontalCarousel } from './ShHorizontalCarousel.vue';
+export { default as ShImageSlideshow } from './ShImageSlideshow.vue';
