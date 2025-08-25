@@ -74,15 +74,17 @@ const $route = useRoute();
     transition: all 0.2s ease;
     position: relative;
     min-width: 60px;
-    --icon-color: var(--tg-theme-button-color, var(--color-primary));
+    --icon-color: var(--tg-theme-hint-color, var(--color-gray-600));
 
     &:hover {
         color: var(--tg-theme-text-color, var(--color-black));
+        --icon-color: var(--tg-theme-text-color, var(--color-black));
         background-color: var(--tg-theme-secondary-bg-color, var(--color-gray-100));
     }
 
     &.active {
         color: var(--tg-theme-button-color, var(--color-primary));
+        --icon-color: var(--tg-theme-hint-color, var(--color-gray-600));
     }
 }
 
