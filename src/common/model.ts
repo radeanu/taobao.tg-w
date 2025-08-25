@@ -30,7 +30,8 @@ export const ORDER_MAP = {
 export const POSITION_MAP = {
     products: 'Товары (Таблица)',
     count: 'Кол-во',
-    color: 'Цвета (Таблица)'
+    color: 'Цвета (Таблица)',
+    size: 'Размер (Таблица)'
 };
 
 export const CLIENT_MAP = {

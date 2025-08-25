@@ -13,7 +13,9 @@ export function useCreateOrder() {
         const res = await positionApi.post('/', {
             fields: {
                 [POSITION_MAP.products]: [item.cart.productId],
-                [POSITION_MAP.count]: item.cart.count
+                [POSITION_MAP.count]: item.cart.count,
+                [POSITION_MAP.color]: item.cart.colorId,
+                [POSITION_MAP.size]: item.cart.sizeId
             }
         });
 

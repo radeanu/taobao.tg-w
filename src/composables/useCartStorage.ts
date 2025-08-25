@@ -71,7 +71,9 @@ export const useCartStore = defineStore('cart', () => {
             if (!data) return;
 
             const parsed = JSON.parse(data) as { products: CartItem[] };
-            cart.value = parsed.products ?? [];
+            const list = parsed.products ?? [];
+
+            cart.value = list.filter((v) => v._v === CART_VERSION && v.count > 0);
         } catch (e) {
             console.log(e);
         }
