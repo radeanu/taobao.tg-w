@@ -69,6 +69,7 @@ function handleClose() {
     align-items: center;
     justify-content: center;
     padding: 20px;
+    padding-bottom: 100px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-family: var(--font-family);
 }

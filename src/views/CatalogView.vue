@@ -25,8 +25,6 @@
             }"
             @click="fetchMore"
         />
-
-        <CartButton v-if="showCartButton" />
     </main>
 </template>
 
@@ -36,17 +34,10 @@ import { onMounted, computed } from 'vue';
 import { ShButton, ShSkeleton } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
-import CartButton from '@/components/CartButton.vue';
-import { useCartStore } from '@/composables/useCartStorage';
 
 const app = window.Telegram.WebApp;
 
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
-const cartStore = useCartStore();
-
-const showCartButton = computed(() => {
-    return products.value.length > 0 && cartStore.cart.length > 0;
-});
 
 onMounted(async () => {
     app.BackButton.hide();
@@ -57,6 +48,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 main {
     padding: 20px 8px;
+    padding-bottom: 100px;
 }
 
 .loading {

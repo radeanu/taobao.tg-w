@@ -65,8 +65,6 @@
                     :disabled="isInCart"
                     @click="addToCart"
                 />
-
-                <CartButton />
             </div>
         </div>
     </main>
@@ -74,7 +72,6 @@
 
 <script lang="ts" setup>
 import { PRODUCT_MAP } from '@/common/model';
-import CartButton from '@/components/CartButton.vue';
 import { useProductPage } from '@/composables/useProductPage';
 import {
     ShImage,
@@ -92,6 +89,7 @@ const { product, loader, selectedSize, selectedColor, isInCart, images, addToCar
 <style lang="scss" scoped>
 main {
     padding: 20px 8px;
+    padding-bottom: 100px;
 }
 
 .product {

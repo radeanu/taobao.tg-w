@@ -57,6 +57,7 @@ app.BackButton.onClick(() => {
 <style scoped lang="scss">
 .cart {
     padding: 20px 8px;
+    padding-bottom: 100px;
 }
 
 .header {
