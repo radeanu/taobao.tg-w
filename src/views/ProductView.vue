@@ -26,7 +26,7 @@
                         v-for="size in product.sizes"
                         :key="size.id"
                         :active="selectedSize === size.id"
-                        @click="setSelectedSize(size.id)"
+                        @click="selectedSize = size.id"
                     >
                         <span>{{ size.name }}</span>
                     </ShChip>
@@ -41,7 +41,7 @@
                         <div
                             class="color-item"
                             :class="{ 'color-item--selected': selectedColor === item.id }"
-                            @click="setSelectedColor(item.id)"
+                            @click="selectedColor = item.id"
                         >
                             <ShImage
                                 lazy
@@ -55,14 +55,15 @@
             </div>
 
             <div class="product-actions">
+                <RouterLink to="/">
+                    <ShButton kind="secondary" class="back-button" label="←" />
+                </RouterLink>
+
                 <ShButton
                     kind="telegram"
-                    :label="isInCart ? 'Убрать' : 'Купить'"
-                    @click="
-                        isInCart
-                            ? cartStore.removeFromCart(product.id)
-                            : cartStore.addToCart(product.id)
-                    "
+                    :label="isInCart ? 'В корзине' : 'Купить'"
+                    :disabled="isInCart"
+                    @click="addToCart"
                 />
 
                 <CartButton />
@@ -72,12 +73,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-
 import { PRODUCT_MAP } from '@/common/model';
-import type { AirImage } from '@/common/types';
 import CartButton from '@/components/CartButton.vue';
-import { useCartStore } from '@/composables/useCartStorage';
 import { useProductPage } from '@/composables/useProductPage';
 import {
     ShImage,
@@ -88,22 +85,8 @@ import {
     ShImageSlideshow
 } from '@/components/UI';
 
-const {
-    product,
-    loader,
-    selectedSize,
-    selectedColor,
-    setSelectedSize,
-    setSelectedColor
-} = useProductPage();
-const cartStore = useCartStore();
-
-const isInCart = computed(() => cartStore.cart.some((p) => p.id === product.value?.id));
-const images = computed(() => {
-    return [product.value?.image, ...(product.value?.images ?? [])].filter(
-        Boolean
-    ) as AirImage[];
-});
+const { product, loader, selectedSize, selectedColor, isInCart, images, addToCart } =
+    useProductPage();
 </script>
 
 <style lang="scss" scoped>

@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
 import { onMounted, ref } from 'vue';
 
+import * as utils from '@/common/utils';
 import type { CartItem } from '@/common/types';
 import { useStorage } from '@/composables/useStorage';
+
+const CART_VERSION = 1;
 
 export const useCartStore = defineStore('cart', () => {
     const storage = useStorage();
@@ -13,22 +16,53 @@ export const useCartStore = defineStore('cart', () => {
         await fetchCart();
     });
 
-    async function addToCart(id: string) {
+    function _submitCart() {
+        return storage.setItem(
+            'cart',
+            JSON.stringify({ products: cart.value.filter((v) => v.count > 0) })
+        );
+    }
+
+    function _findCartItem(
+        v: CartItem,
+        productId: string,
+        sizeId: string | null,
+        colorId: string
+    ) {
+        return v.productId === productId && v.sizeId === sizeId && v.colorId === colorId;
+    }
+
+    async function addToCart(productId: string, sizeId: string | null, colorId: string) {
         await fetchCart();
 
-        const existing = cart.value.find((v) => v.id === id);
+        const existing = cart.value.find((v) => {
+            return _findCartItem(v, productId, sizeId, colorId);
+        });
         if (existing) return;
 
-        cart.value.push({ id, count: 1 });
+        cart.value.push({
+            _v: CART_VERSION,
+            id: utils.generateUUID(),
+            productId,
+            count: 1,
+            sizeId,
+            colorId
+        });
 
-        return storage.setItem('cart', JSON.stringify({ products: cart.value }));
+        return _submitCart();
+    }
+
+    function removeFromCartByProductId(productId: string) {
+        cart.value = cart.value.filter((v) => v.productId !== productId);
+
+        return _submitCart();
     }
 
     async function removeFromCart(id: string) {
         await fetchCart();
         cart.value = cart.value.filter((v) => v.id !== id);
 
-        return storage.setItem('cart', JSON.stringify({ products: cart.value }));
+        return _submitCart();
     }
 
     async function fetchCart() {
@@ -50,15 +84,12 @@ export const useCartStore = defineStore('cart', () => {
 
         item.count = count;
 
-        return storage.setItem(
-            'cart',
-            JSON.stringify({ products: cart.value.filter((v) => v.count > 0) })
-        );
+        return _submitCart();
     }
 
     async function clearCart() {
         cart.value = [];
-        return storage.setItem('cart', JSON.stringify({ products: [] }));
+        return _submitCart();
     }
 
     return {
@@ -66,7 +97,8 @@ export const useCartStore = defineStore('cart', () => {
         setCount,
         fetchCart,
         addToCart,
+        clearCart,
         removeFromCart,
-        clearCart
+        removeFromCartByProductId
     };
 });

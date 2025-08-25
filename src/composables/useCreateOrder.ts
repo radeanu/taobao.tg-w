@@ -12,15 +12,15 @@ export function useCreateOrder() {
     async function _createPosition(item: CartProduct) {
         const res = await positionApi.post('/', {
             fields: {
-                [POSITION_MAP.products]: [item.id],
-                [POSITION_MAP.count]: item.count
+                [POSITION_MAP.products]: [item.cart.productId],
+                [POSITION_MAP.count]: item.cart.count
             }
         });
 
         const payload = res.data as AirRecord;
         if (!payload.id) return;
 
-        positions.value.push({ id: payload.id, product: item.id });
+        positions.value.push({ id: payload.id, product: item.cart.productId });
     }
 
     async function createOrder(

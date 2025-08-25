@@ -1,15 +1,17 @@
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useProduct } from './useProduct';
 import { useLoading } from '@/composables/useLoading';
 import { useQuerySync } from '@/composables/useQuerySync';
 import { productApi } from '@/composables/useAirtable';
-import type { Product, AirRecord } from '@/common/types';
+import type { Product, AirRecord, AirImage } from '@/common/types';
+import { useCartStore } from './useCartStorage';
 
 export function useProductPage() {
     const route = useRoute();
     const loader = useLoading();
+    const cartStore = useCartStore();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
     const product = ref<Product | null>(null);
@@ -17,14 +19,56 @@ export function useProductPage() {
     const { queryVal: selectedSize } = useQuerySync<string | null>('size');
     const { queryVal: selectedColor } = useQuerySync<string | null>('color');
 
+    const isInCart = computed(() => {
+        if (!product.value?.id) return false;
+        const pId = product.value.id;
+
+        return cartStore.cart.some((p) => {
+            return (
+                p.productId === pId &&
+                p.sizeId === selectedSize.value &&
+                p.colorId === selectedColor.value
+            );
+        });
+    });
+
+    const images = computed(() => {
+        return [product.value?.image, ...(product.value?.images ?? [])].filter(
+            Boolean
+        ) as AirImage[];
+    });
+
     watch(
         () => route.params.id,
         async (newId) => {
             if (!newId) return;
             await fetchProductById(newId as string);
+
+            selectDefaultFilters();
         },
         { immediate: true }
     );
+
+    function addToCart() {
+        if (!product.value || !selectedColor.value) return;
+        if (product.value.sizes.length && !selectedSize.value) return;
+
+        return cartStore.addToCart(
+            product.value.id,
+            selectedSize.value,
+            selectedColor.value
+        );
+    }
+
+    function selectDefaultFilters() {
+        if (!selectedSize.value) {
+            selectedSize.value = product.value?.sizes[0]?.id ?? null;
+        }
+
+        if (!selectedColor.value) {
+            selectedColor.value = product.value?.colors[0]?.id ?? null;
+        }
+    }
 
     async function fetchProductById(id: string) {
         try {
@@ -43,8 +87,11 @@ export function useProductPage() {
 
     return {
         loader,
+        images,
         product,
+        isInCart,
         selectedSize,
-        selectedColor
+        selectedColor,
+        addToCart
     };
 }

@@ -81,12 +81,14 @@ export type Product = {
 
 export type CartItem = {
     id: string;
+    productId: string;
     count: number;
+    sizeId: string | null;
+    colorId: string;
+    _v: number; // version
 };
 
-export type CartProduct = Product & {
-    count: number;
-};
+export type CartProduct = Product & { cart: CartItem & { color?: Color; size?: Size } };
 
 export type ClientInfo = {
     name: string;

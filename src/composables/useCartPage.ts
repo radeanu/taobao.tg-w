@@ -16,12 +16,12 @@ export function useCartPage() {
     const createOrder = useCreateOrder();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
-    const items = ref<CartProduct[]>([]);
+    const cartProducts = ref<CartProduct[]>([]);
     const error = ref<string | null>(null);
 
     const totalPrice = computed(() => {
-        return items.value.reduce((acc, p) => {
-            return acc + p.priceRub * p.count;
+        return cartProducts.value.reduce((acc, p) => {
+            return acc + p.priceRub * p.cart.count;
         }, 0);
     });
 
@@ -30,9 +30,17 @@ export function useCartPage() {
         await fetchCartProducts();
     });
 
+    async function removeProduct(id: string) {
+        await cartStore.removeFromCart(id);
+        await fetchCartProducts();
+    }
+
     async function fetchCartProducts() {
-        const ids = cartStore.cart.map((c) => c.id);
-        if (!ids.length) return;
+        const ids = [...new Set(cartStore.cart.map((c) => c.productId))];
+        if (!ids.length) {
+            cartProducts.value = [];
+            return;
+        }
 
         try {
             loader.start();
@@ -50,31 +58,32 @@ export function useCartPage() {
 
             await populateFields(records);
 
-            items.value = records.map((r: AirRecord) => {
-                const cartItem = cartStore.cart.find((c) => c.id === r.id);
-                const parsedProduct = parseAirProductToProduct(r);
+            const products = records.map((record: AirRecord) =>
+                parseAirProductToProduct(record)
+            );
 
-                return {
-                    ...parsedProduct,
-                    count: cartItem?.count ?? 1
-                };
-            });
+            cartProducts.value = cartStore.cart
+                .map((item) => {
+                    const product = products.find((p) => p.id === item.productId);
+                    if (!product) return null;
+
+                    const color = product.colors.find((c) => c.id === item.colorId);
+                    const size = product.sizes.find((s) => s.id === item.sizeId);
+
+                    return {
+                        ...product,
+                        cart: {
+                            ...item,
+                            color,
+                            size
+                        }
+                    };
+                })
+                .filter((v) => v !== null);
         } catch (e) {
             console.log(e);
         } finally {
             loader.end();
-        }
-    }
-
-    async function updateCount(id: string, count: number) {
-        const targetIdx = items.value.findIndex((i) => i.id === id);
-        if (targetIdx === -1) return;
-
-        await cartStore.setCount(id, count);
-        items.value[targetIdx].count = count;
-
-        if (count === 0) {
-            items.value.splice(targetIdx, 1);
         }
     }
 
@@ -83,7 +92,7 @@ export function useCartPage() {
             error.value = null;
             loader.start();
 
-            const result = await createOrder.createOrder(items.value);
+            const result = await createOrder.createOrder(cartProducts.value);
 
             if (!result.success) {
                 error.value = result.message;
@@ -101,12 +110,12 @@ export function useCartPage() {
     }
 
     return {
-        items,
-        loader,
         error,
+        loader,
         submit,
         totalPrice,
-        updateCount,
+        cartProducts,
+        removeProduct,
         fetchCartProducts
     };
 }

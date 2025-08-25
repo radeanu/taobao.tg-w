@@ -4,6 +4,7 @@ import { createPinia } from 'pinia';
 import 'virtual:svg-icons-register';
 
 import '@/styles/main.scss';
+import useDirectives from '@/directives';
 import App from './App.vue';
 import router from './router';
 const app = createApp(App);
@@ -11,6 +12,8 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
+
+useDirectives(app);
 
 app.mount('#app');
 

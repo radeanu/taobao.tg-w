@@ -7,41 +7,46 @@
         <p class="price">{{ product.priceRub }} ₽</p>
 
         <ShButton
-            v-if="isInCart"
-            label="Убрать"
-            kind="telegram"
+            :label="isInCart ? 'В корзине' : 'Купить'"
+            :kind="isInCart ? 'telegram' : 'secondary'"
             full-width
+            :disabled="isInCart"
             class="btn-buy"
-            @click="cartStore.removeFromCart(product.id)"
+            @click="showModal = !isInCart"
         />
 
-        <ShButton
-            v-else
-            label="Купить"
-            kind="secondary"
-            full-width
-            class="btn-buy"
-            @click="cartStore.addToCart(product.id)"
+        <ProductSelectionModal
+            v-if="showModal"
+            :id="product.id"
+            @close="showModal = false"
+            @added="handleAdded"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import type { Product } from '@/common/types';
 import { ShImage, ShButton } from '@/components/UI';
 import { useCartStore } from '@/composables/useCartStorage';
+import ProductSelectionModal from '@/components/ProductSelectionModal.vue';
 
 const props = defineProps<{
     product: Product;
 }>();
 
 const cartStore = useCartStore();
+const showModal = ref(false);
 
 const isInCart = computed(() => {
-    return cartStore.cart.some((p) => p.id === props.product.id);
+    return cartStore.cart.some((p) => p.productId === props.product.id);
 });
+
+async function handleAdded() {
+    await cartStore.fetchCart();
+    showModal.value = false;
+}
 </script>
 
 <style lang="scss" scoped>

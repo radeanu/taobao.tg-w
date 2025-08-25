@@ -1,80 +1,28 @@
 <template>
     <main class="cart">
-        <h2 class="title">Корзина</h2>
+        <div class="header">
+            <RouterLink to="/">
+                <ShButton kind="unstyled" class="back-button" label="←" />
+            </RouterLink>
+
+            <h2 class="title">Корзина</h2>
+        </div>
 
         <ShSkeleton v-if="loader.isLoading.value" class="skeleton" />
 
         <template v-else>
-            <div v-if="items.length === 0" class="empty">В корзине пока пусто</div>
+            <div v-if="!cartProducts.length" class="empty">В корзине пока пусто</div>
 
             <div v-else class="list">
-                <div v-for="it in items" :key="it.id" class="row">
-                    <RouterLink
-                        :to="{ name: 'product', params: { id: it.id } }"
-                        class="row__image"
-                    >
-                        <ShImage
-                            :src="it.image?.thumbnails?.large?.url || it.image?.url"
-                        />
-                    </RouterLink>
-
-                    <div class="row__body">
-                        <div class="row__title">Артикул: {{ it.article }}</div>
-                        <div class="row__price">{{ it.priceRub }} ₽</div>
-
-                        <div v-if="it.colors?.length" class="row__colors">
-                            <span class="colors-label">Цвета:</span>
-                            <div class="colors-list">
-                                <div
-                                    v-for="color in it.colors"
-                                    :key="color.id"
-                                    class="color-item"
-                                >
-                                    <ShImage
-                                        v-if="color.image"
-                                        :src="
-                                            color.image.thumbnails?.small?.url ||
-                                            color.image.url
-                                        "
-                                        class="color-image"
-                                    />
-                                    <span class="color-name">{{ color.name }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row__controls">
-                            <ShButton
-                                kind="secondary"
-                                @click="updateCount(it.id, it.count - 1)"
-                                label="-"
-                            />
-
-                            <input
-                                class="row__count"
-                                type="number"
-                                :value="it.count"
-                                min="1"
-                            />
-
-                            <ShButton
-                                kind="secondary"
-                                @click="updateCount(it.id, it.count + 1)"
-                                label="+"
-                            />
-
-                            <ShButton
-                                kind="unstyled"
-                                class="row__remove"
-                                @click="updateCount(it.id, 0)"
-                                label="Удалить"
-                            />
-                        </div>
-                    </div>
-                </div>
+                <CartProduct
+                    v-for="(product, idx) in cartProducts"
+                    :key="product.cart.id"
+                    v-model="cartProducts[idx]"
+                    @remove="removeProduct(product.cart.id)"
+                />
             </div>
 
-            <div v-if="items.length" class="footer">
+            <div v-if="cartProducts.length" class="footer">
                 <div v-if="error" class="error-message">
                     <div class="error-text">{{ error }}</div>
                     <ShButton kind="unstyled" class="error-close" @click="error = null">
@@ -91,13 +39,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 
-import { ShButton, ShImage, ShSkeleton } from '@UI';
+import { ShButton, ShSkeleton } from '@UI';
 import { useCartPage } from '@/composables/useCartPage';
+import CartProduct from '@/components/CartProduct.vue';
 
 const app = window.Telegram.WebApp;
 
 const router = useRouter();
-const { loader, items, totalPrice, updateCount, submit, error } = useCartPage();
+const { cartProducts, loader, error, totalPrice, removeProduct, submit } = useCartPage();
 
 app.BackButton.show();
 app.BackButton.onClick(() => {
@@ -110,14 +59,30 @@ app.BackButton.onClick(() => {
     padding: 20px 8px;
 }
 
+.header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.back-button {
+    padding: 8px;
+    color: var(--tg-theme-link-color, var(--color-blue));
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.title {
+    margin: 0;
+    flex: 1;
+}
+
 .skeleton {
     width: 100%;
     height: 200px;
     border-radius: var(--border-radius-m);
-}
-
-.title {
-    margin-bottom: 12px;
 }
 
 .empty {
@@ -129,116 +94,6 @@ app.BackButton.onClick(() => {
     display: flex;
     flex-direction: column;
     gap: 16px;
-}
-
-.row {
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 12px;
-    align-items: center;
-    padding: 8px;
-    border-radius: var(--border-radius);
-    background: var(--tg-theme-bg-color, var(--color-white));
-}
-
-.row__image {
-    width: 90px;
-    height: 90px;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    text-decoration: none;
-
-    &:hover {
-        opacity: 0.8;
-    }
-}
-
-.row__body {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.row__title {
-    font-weight: 600;
-}
-
-.row__price {
-    color: var(--tg-theme-section-header-text-color, var(--color-black));
-}
-
-.row__colors {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.colors-label {
-    font-size: 12px;
-    color: var(--tg-theme-hint-color, var(--color-gray));
-    font-weight: 500;
-}
-
-.colors-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.color-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    background: var(--tg-theme-secondary-bg-color, var(--color-gray-light));
-    border-radius: var(--border-radius-s);
-    font-size: 11px;
-}
-
-.color-image {
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-    object-fit: cover;
-}
-
-.color-name {
-    color: var(--tg-theme-text-color, var(--color-black));
-    font-weight: 500;
-}
-
-.row__controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.row__count {
-    width: 56px;
-    height: 36px;
-    text-align: center;
-    border-radius: var(--border-radius-s);
-}
-
-/* Hide default number input spinners (Chrome, Safari, Edge) */
-.row__count::-webkit-outer-spin-button,
-.row__count::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-}
-
-/* Hide default number input spinners (Firefox) */
-.row__count {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.row__remove {
-    margin-left: auto;
-    color: var(--color-red);
 }
 
 .footer {

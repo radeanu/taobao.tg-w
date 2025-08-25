@@ -26,7 +26,7 @@
             <div class="container-preview">
                 <ShImage
                     class="container-preview__image"
-                    :src="imageSrc"
+                    :src="previewSrc"
                     lazy
                     fit="contain"
                 />
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, watchEffect } from 'vue';
+import { computed, ref, useTemplateRef, watchEffect } from 'vue';
 
 import ShIcon from './ShIcon.vue';
 import ShModal from './ShModal.vue';
@@ -45,7 +45,7 @@ import ShSkeleton from './ShSkeleton.vue';
 export type ShImageT = {
     src?: string;
     lazy?: boolean;
-    preview?: boolean;
+    preview?: boolean | string;
     defaultImage?: string;
     fit?: 'cover' | 'contain' | 'fill' | 'scale-down';
 };
@@ -72,6 +72,11 @@ watchEffect(() => {
     wrapperNode.value.style.filter = 'blur(5px)';
     wrapperNode.value.style.backgroundRepeat = 'no-repeat';
     wrapperNode.value.style.backgroundImage = `url(${imageSrc.value})`;
+});
+
+const previewSrc = computed(() => {
+    if (typeof props.preview === 'string') return props.preview;
+    return imageSrc.value;
 });
 
 function handleError() {
