@@ -55,7 +55,6 @@ const $route = useRoute();
     right: 0;
     z-index: var(--z-index-navigation);
     background-color: var(--tg-theme-bg-color, var(--color-white));
-    border-top: 1px solid var(--tg-theme-hint-color, var(--color-gray-200));
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -90,6 +89,7 @@ const $route = useRoute();
     font-size: 12px;
     font-weight: 500;
     line-height: 1;
+    color: var(--tg-theme-hint-color, var(--color-gray-600));
 }
 
 .cart-badge {
