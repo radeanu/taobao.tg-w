@@ -16,7 +16,7 @@ defineProps<ShIconT>();
 .sh-icon {
     overflow: hidden;
     fill: transparent;
-    color: var(--icon-color, currentColor);
+    color: var(--icon-color, inherit);
     width: var(--icon-width, 20px);
     height: var(--icon-height, 20px);
 }
