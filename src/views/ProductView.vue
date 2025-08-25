@@ -70,8 +70,8 @@
 import { PRODUCT_MAP } from '@/common/model';
 import { useProductPage } from '@/composables/useProductPage';
 import {
-    ShImage,
     ShChip,
+    ShImage,
     ShButton,
     ShSkeleton,
     ShHorizontalCarousel,

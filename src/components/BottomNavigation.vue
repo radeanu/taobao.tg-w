@@ -12,6 +12,11 @@
         >
             <ShIcon name="heart" />
             <span class="nav-label">Избранное</span>
+            <ShBadge
+                v-if="favoritesCount > 0"
+                :value="favoritesCount"
+                class="favorites-badge"
+            />
         </RouterLink>
 
         <RouterLink
@@ -40,9 +45,13 @@ import { RouterLink, useRoute } from 'vue-router';
 import { ShIcon, ShBadge } from '@/components/UI';
 import { computed } from 'vue';
 import { useCartStore } from '@/composables/useCartStorage';
+import { useFavoritesStore } from '@/composables/useFavorites';
 
 const cartStore = useCartStore();
+const favoritesStore = useFavoritesStore();
+
 const cartItemCount = computed(() => cartStore.cart.length);
+const favoritesCount = computed(() => favoritesStore.favorites.length);
 
 const $route = useRoute();
 </script>
@@ -94,7 +103,8 @@ const $route = useRoute();
     line-height: 1;
 }
 
-.cart-badge {
+.cart-badge,
+.favorites-badge {
     position: absolute;
     top: 4px;
     right: 4px;
