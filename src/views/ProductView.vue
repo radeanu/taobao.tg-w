@@ -55,10 +55,6 @@
             </div>
 
             <div class="product-actions">
-                <RouterLink to="/">
-                    <ShButton kind="secondary" class="back-button" label="←" />
-                </RouterLink>
-
                 <ShButton
                     kind="telegram"
                     :label="isInCart ? 'В корзине' : 'Купить'"

@@ -1,10 +1,6 @@
 <template>
     <main class="cart">
         <div class="header">
-            <RouterLink to="/">
-                <ShButton kind="unstyled" class="back-button" label="←" />
-            </RouterLink>
-
             <h2 class="title">Корзина</h2>
         </div>
 
@@ -37,21 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-
 import { ShButton, ShSkeleton } from '@UI';
 import { useCartPage } from '@/composables/useCartPage';
 import CartProduct from '@/components/CartProduct.vue';
-
-const app = window.Telegram.WebApp;
-
-const router = useRouter();
 const { cartProducts, loader, error, totalPrice, removeProduct, submit } = useCartPage();
-
-app.BackButton.show();
-app.BackButton.onClick(() => {
-    router.push('/');
-});
 </script>
 
 <style scoped lang="scss">
@@ -63,16 +48,7 @@ app.BackButton.onClick(() => {
 .header {
     display: flex;
     align-items: center;
-    gap: 8px;
     margin-bottom: 8px;
-}
-
-.back-button {
-    padding: 8px;
-    color: var(--tg-theme-link-color, var(--color-blue));
-    background: none;
-    border: none;
-    cursor: pointer;
 }
 
 .title {
