@@ -2,7 +2,7 @@
     <nav class="bottom-navigation">
         <RouterLink to="/" class="nav-item" :class="{ active: $route.name === 'home' }">
             <ShIcon name="home" />
-            <span class="nav-label">Home</span>
+            <span class="nav-label">Каталог</span>
         </RouterLink>
 
         <RouterLink
@@ -11,7 +11,7 @@
             :class="{ active: $route.name === 'favorites' }"
         >
             <ShIcon name="heart" />
-            <span class="nav-label">Favorites</span>
+            <span class="nav-label">Избранное</span>
         </RouterLink>
 
         <RouterLink
@@ -20,7 +20,7 @@
             :class="{ active: $route.name === 'cart' }"
         >
             <ShIcon name="cart" />
-            <span class="nav-label">Cart</span>
+            <span class="nav-label">Корзина</span>
             <ShBadge v-if="cartItemCount > 0" :value="cartItemCount" class="cart-badge" />
         </RouterLink>
 
@@ -30,7 +30,7 @@
             :class="{ active: $route.name === 'orders' }"
         >
             <ShIcon name="orders" />
-            <span class="nav-label">Orders</span>
+            <span class="nav-label">Заказы</span>
         </RouterLink>
     </nav>
 </template>
