@@ -74,6 +74,7 @@ const $route = useRoute();
     transition: all 0.2s ease;
     position: relative;
     min-width: 60px;
+    --icon-color: var(--tg-theme-button-color, var(--color-primary));
 
     &:hover {
         color: var(--tg-theme-text-color, var(--color-black));
@@ -89,7 +90,6 @@ const $route = useRoute();
     font-size: 12px;
     font-weight: 500;
     line-height: 1;
-    color: var(--tg-theme-hint-color, var(--color-gray-600));
 }
 
 .cart-badge {
