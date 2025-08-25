@@ -10,14 +10,17 @@ export function useCreateOrder() {
     const positions = ref<Array<{ id: string; product: string }>>([]);
 
     async function _createPosition(item: CartProduct) {
-        const res = await positionApi.post('/', {
-            fields: {
-                [POSITION_MAP.count]: item.cart.count,
-                [POSITION_MAP.size]: [item.cart.sizeId],
-                [POSITION_MAP.color]: [item.cart.colorId],
-                [POSITION_MAP.products]: [item.cart.productId]
-            }
-        });
+        const fields = {
+            [POSITION_MAP.count]: item.cart.count,
+            [POSITION_MAP.color]: [item.cart.colorId],
+            [POSITION_MAP.products]: [item.cart.productId]
+        };
+
+        if (item.cart.sizeId) {
+            fields[POSITION_MAP.size] = [item.cart.sizeId];
+        }
+
+        const res = await positionApi.post('/', { fields });
 
         const payload = res.data as AirRecord;
         if (!payload.id) return;
