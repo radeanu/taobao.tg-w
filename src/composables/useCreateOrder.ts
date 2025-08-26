@@ -32,14 +32,14 @@ export function useCreateOrder() {
         items: CartProduct[]
     ): Promise<{ success: boolean; message: string }> {
         try {
-            const clientId = await findOrCreateClient();
-            if (!clientId) {
+            const client = await findOrCreateClient();
+            if (!client) {
                 return { success: false, message: 'Ошибка при создании заказа' };
             }
 
             const orderRes = await orderApi.post('/', {
                 fields: {
-                    [ORDER_MAP.clients]: [clientId]
+                    [ORDER_MAP.clients]: [client.id]
                 }
             });
 

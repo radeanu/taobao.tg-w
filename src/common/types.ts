@@ -94,3 +94,18 @@ export type ClientInfo = {
     name: string;
     tg_id: number;
 };
+
+export type Client = {
+    id: string;
+    name: string;
+    tg_id: number;
+};
+
+export type Order = {
+    id: string;
+    number: number;
+    createdAt: string;
+    status: string;
+    price: number;
+    positions: string[];
+};

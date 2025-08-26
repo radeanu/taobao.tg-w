@@ -93,8 +93,8 @@ const $route = useRoute();
     }
 
     &.active {
-        color: var(--tg-theme-button-color, var(--color-primary));
-        --icon-color: var(--tg-theme-button-color, var(--color-primary));
+        color: var(--tg-theme-button-color, var(--color-red));
+        --icon-color: var(--tg-theme-button-color, var(--color-red));
     }
 }
 

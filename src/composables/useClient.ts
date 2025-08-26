@@ -1,7 +1,7 @@
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { CLIENT_MAP } from '@/common/model';
 import { clientApi } from '@/composables/useAirtable';
-import type { AirRecord, ClientInfo } from '@/common/types';
+import type { AirRecord, Client, ClientInfo } from '@/common/types';
 
 export function useClient() {
     const app = window.Telegram.WebApp;
@@ -17,7 +17,7 @@ export function useClient() {
         };
     });
 
-    async function findOrCreateClient(): Promise<string | null> {
+    async function findOrCreateClient(): Promise<Client | null> {
         try {
             const findRes = await clientApi.get('/', {
                 params: {
@@ -28,7 +28,11 @@ export function useClient() {
 
             const existingClient = findRes.data?.records?.[0];
             if (existingClient) {
-                return existingClient.id;
+                return {
+                    id: existingClient.id,
+                    name: existingClient.fields[CLIENT_MAP.name] as string,
+                    tg_id: existingClient.fields[CLIENT_MAP.tg_id] as number
+                };
             }
 
             const createRes = await clientApi.post('/', {
@@ -41,7 +45,11 @@ export function useClient() {
             const newClient = createRes.data as AirRecord;
             if (!newClient.id) return null;
 
-            return newClient.id;
+            return {
+                id: newClient.id,
+                name: newClient.fields[CLIENT_MAP.name] as string,
+                tg_id: newClient.fields[CLIENT_MAP.tg_id] as number
+            };
         } catch (error) {
             console.error('Error finding/creating client:', error);
             return null;

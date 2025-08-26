@@ -22,9 +22,13 @@ export const SIZE_MAP = {
 };
 
 export const ORDER_MAP = {
-    id: 'Номер заказа',
+    number: 'Номер заказа',
+    clientTgId: 'Телеграм (from Клиенты)',
     positions: 'Позиции',
-    clients: 'Клиенты'
+    clients: 'Клиенты',
+    createdAt: 'Created',
+    status: '订单状态 Статус заказа',
+    price: 'Стоимость Итого (Позиции)'
 };
 
 export const POSITION_MAP = {
@@ -36,5 +40,6 @@ export const POSITION_MAP = {
 
 export const CLIENT_MAP = {
     name: 'ФИО',
-    tg_id: 'Телеграм'
+    tg_id: 'Телеграм',
+    orders: 'Заказы'
 };
