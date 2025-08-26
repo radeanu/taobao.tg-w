@@ -45,7 +45,7 @@ import { computed, ref } from 'vue';
 import type { Product } from '@/common/types';
 import { ShImage, ShButton, ShIcon } from '@/components/UI';
 import { useCartStore } from '@/composables/useCartStorage';
-import { useFavoritesStore } from '@/composables/useFavorites';
+import { useFavoritesStore } from '@/stores/favorites.store';
 import ProductSelectionModal from '@/components/ProductSelectionModal.vue';
 
 const props = defineProps<{

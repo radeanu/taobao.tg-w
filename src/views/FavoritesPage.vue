@@ -5,12 +5,12 @@
         </header>
 
         <div class="favorites-content">
-            <ShSkeleton v-if="favoritesStore.loading.isLoading" class="skeleton" />
+            <ShSkeleton v-if="isLoading" class="skeleton" />
 
             <div v-else>
-                <div v-if="favoritesStore.favorites.length" class="products-grid">
+                <div v-if="products.length" class="products-grid">
                     <ProductCard
-                        v-for="product in favoriteProducts"
+                        v-for="product in products"
                         :key="product.id"
                         :product="product"
                     />
@@ -35,26 +35,28 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { ShIcon, ShSkeleton } from '@/components/UI';
-import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
-import { useFavoritesStore } from '@/composables/useFavorites';
+import { ShIcon, ShSkeleton } from '@/components/UI';
+import { useProducts } from '@/composables/useProducts';
+import { useFavoritesStore } from '@/stores/favorites.store';
 
 const favoritesStore = useFavoritesStore();
-const { products, fetchProductsCatalog } = useCatalog();
+const { fetchProducts, products, loading } = useProducts();
 
-const favoriteProducts = computed(() => {
-    return products.value.filter((product) =>
-        favoritesStore.favorites.includes(product.id)
-    );
+const isLoading = computed(() => {
+    return loading.isLoading.value || favoritesStore.loading.isLoading;
 });
 
-onMounted(async () => {
-    await Promise.all([favoritesStore.fetchFavorites(), fetchProductsCatalog()]);
-});
+watch(
+    () => favoritesStore.favorites,
+    async () => {
+        await fetchProducts(favoritesStore.favorites);
+    },
+    { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>

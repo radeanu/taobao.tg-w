@@ -41,11 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink, useRoute } from 'vue-router';
-import { ShIcon, ShBadge } from '@/components/UI';
 import { computed } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+
+import { ShIcon, ShBadge } from '@/components/UI';
 import { useCartStore } from '@/composables/useCartStorage';
-import { useFavoritesStore } from '@/composables/useFavorites';
+import { useFavoritesStore } from '@/stores/favorites.store';
 
 const cartStore = useCartStore();
 const favoritesStore = useFavoritesStore();
