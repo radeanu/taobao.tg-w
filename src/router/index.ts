@@ -6,32 +6,32 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: () => import('@/views/CatalogView.vue')
+            component: () => import('@/views/CatalogPage.vue')
         },
         {
             path: '/favorites',
             name: 'favorites',
-            component: () => import('@/views/FavoritesView.vue')
+            component: () => import('@/views/FavoritesPage.vue')
         },
         {
             path: '/cart',
             name: 'cart',
-            component: () => import('@/views/CartView.vue')
+            component: () => import('@/views/CartPage.vue')
         },
         {
             path: '/orders',
             name: 'orders',
-            component: () => import('@/views/OrdersView.vue')
+            component: () => import('@/views/OrdersPage.vue')
         },
         {
             path: '/success',
             name: 'success',
-            component: () => import('@/views/ResultView.vue')
+            component: () => import('@/views/ResultPage.vue')
         },
         {
             path: '/product/:id',
             name: 'product',
-            component: () => import('@/views/ProductView.vue')
+            component: () => import('@/views/ProductPage.vue')
         }
     ]
 });

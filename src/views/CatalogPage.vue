@@ -29,18 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted } from 'vue';
 
 import { ShButton, ShSkeleton } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 
-const app = window.Telegram.WebApp;
-
 const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
 
 onMounted(async () => {
-    app.BackButton.hide();
     await fetchProductsCatalog();
 });
 </script>
