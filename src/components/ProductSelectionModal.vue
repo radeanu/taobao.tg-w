@@ -85,6 +85,7 @@ import { useCartStore } from '@/composables/useCartStorage';
 import { productApi } from '@/composables/useAirtable';
 import { useLoading } from '@/composables/useLoading';
 import { useProduct } from '@/composables/useProduct';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 const props = defineProps<{
     id: string;
@@ -97,6 +98,7 @@ const $emit = defineEmits<{
 
 const loader = useLoading();
 const cartStore = useCartStore();
+const notification = useGlobalNotification();
 const { parseAirProductToProduct, populateFields } = useProduct();
 
 const product = ref<Product | null>(null);
@@ -122,7 +124,8 @@ onMounted(async () => {
 
         selectedSize.value = product.value?.sizes[0] ?? null;
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        notification.error('Не удалось получить продукт');
     } finally {
         loader.end();
     }

@@ -57,8 +57,9 @@
 <script setup lang="ts">
 import { ShButton, ShImage } from '@UI';
 import type { CartProduct } from '@/common/types';
-import { useCartStore } from '@/composables/useCartStorage';
 import { useLoading } from '@/composables/useLoading';
+import { useCartStore } from '@/composables/useCartStorage';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 const product = defineModel<CartProduct>({ required: true });
 const $emit = defineEmits<{
@@ -67,6 +68,7 @@ const $emit = defineEmits<{
 
 const cartStore = useCartStore();
 const loader = useLoading();
+const notification = useGlobalNotification();
 
 async function updateCount(count: number) {
     try {
@@ -78,6 +80,7 @@ async function updateCount(count: number) {
         product.value.cart.count = count;
     } catch (error) {
         console.error(error);
+        notification.error('Не удалось обновить количество');
     } finally {
         loader.end();
     }

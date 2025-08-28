@@ -4,12 +4,13 @@ import { onMounted, ref } from 'vue';
 import * as utils from '@/common/utils';
 import type { CartItem } from '@/common/types';
 import { useStorage } from '@/composables/useStorage';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 const CART_VERSION = 1;
 
 export const useCartStore = defineStore('cart', () => {
     const storage = useStorage();
-
+    const notification = useGlobalNotification();
     const cart = ref<CartItem[]>([]);
 
     onMounted(async () => {
@@ -75,7 +76,8 @@ export const useCartStore = defineStore('cart', () => {
 
             cart.value = list.filter((v) => v._v === CART_VERSION && v.count > 0);
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            notification.error('Не удалось получить продукты');
         }
     }
 

@@ -8,12 +8,14 @@ import { productApi } from '@/composables/useAirtable';
 import { useCartStore } from '@/composables/useCartStorage';
 import type { CartProduct, AirRecord } from '@/common/types';
 import { useCreateOrder } from '@/composables/useCreateOrder';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 export function useCartPage() {
     const loader = useLoading();
     const router = useRouter();
     const cartStore = useCartStore();
     const createOrder = useCreateOrder();
+    const notification = useGlobalNotification();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
     const cartProducts = ref<CartProduct[]>([]);
@@ -36,13 +38,14 @@ export function useCartPage() {
     }
 
     async function fetchCartProducts() {
-        const ids = [...new Set(cartStore.cart.map((c) => c.productId))];
-        if (!ids.length) {
-            cartProducts.value = [];
-            return;
-        }
-
         try {
+            const ids = [...new Set(cartStore.cart.map((c) => c.productId))];
+
+            if (!ids.length) {
+                cartProducts.value = [];
+                return;
+            }
+
             loader.start();
             const res = await productApi.get('/', {
                 params: {
@@ -82,6 +85,7 @@ export function useCartPage() {
                 .filter((v) => v !== null);
         } catch (e) {
             console.log(e);
+            notification.error('Не удалось получить продукты');
         } finally {
             loader.end();
         }
@@ -104,6 +108,7 @@ export function useCartPage() {
         } catch (e) {
             console.log(e);
             error.value = 'Ошибка при создании заказа. Попробуйте еще раз.';
+            notification.error('Не удалось создать заказ');
         } finally {
             loader.end();
         }

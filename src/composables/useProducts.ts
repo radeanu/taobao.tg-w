@@ -4,11 +4,13 @@ import type { AirRecord, Product } from '@/common/types';
 import { productApi } from '@/composables/useAirtable';
 import { useLoading } from '@/composables/useLoading';
 import { useProduct } from '@/composables/useProduct';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 export function useProducts() {
     const products = ref<Product[]>([]);
 
     const loading = useLoading();
+    const notification = useGlobalNotification();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
     async function fetchProducts(ids: string[]) {
@@ -34,7 +36,8 @@ export function useProducts() {
                 products.value = parsed;
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            notification.error('Не удалось получить продукты');
         } finally {
             loading.end();
         }

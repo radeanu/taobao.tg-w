@@ -3,10 +3,12 @@ import { onMounted, ref } from 'vue';
 
 import { useLoading } from '@/composables/useLoading';
 import { useStorage } from '@/composables/useStorage';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 export const useFavoritesStore = defineStore('favorites', () => {
     const loading = useLoading();
     const storage = useStorage();
+    const notification = useGlobalNotification();
 
     const favorites = ref<string[]>([]);
 
@@ -57,7 +59,8 @@ export const useFavoritesStore = defineStore('favorites', () => {
             const parsed = JSON.parse(data) as { favorites: string[] };
             favorites.value = parsed.favorites ?? [];
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            notification.error('Не удалось получить избранные');
         } finally {
             loading.end();
         }

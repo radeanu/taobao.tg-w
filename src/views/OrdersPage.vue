@@ -6,18 +6,18 @@
                 label="Новые"
                 :class="{
                     'tab-button': true,
-                    'tab-button__active': activeTab === 'new'
+                    'tab-button__active': orderType === 'new'
                 }"
-                @click="activeTab = 'new'"
+                @click="orderType = 'new'"
             />
             <ShButton
                 kind="unstyled"
                 :class="{
                     'tab-button': true,
-                    'tab-button__active': activeTab === 'archive'
+                    'tab-button__active': orderType === 'archive'
                 }"
                 label="Архив"
-                @click="activeTab = 'archive'"
+                @click="orderType = 'archive'"
             />
         </header>
 
@@ -63,15 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-
 import { RouterLink } from 'vue-router';
 import { ShButton, ShIcon, ShSkeleton } from '@/components/UI';
 import { useClientOrders } from '@/composables/useClientOrders';
 
-const activeTab = ref<'new' | 'archive'>('new');
-
-const { orders, loading } = useClientOrders();
+const { orders, loading, orderType } = useClientOrders();
 
 function getStatusText(status: string): string {
     const statusMap: Record<string, string> = {

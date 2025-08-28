@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { CLIENT_MAP } from '@/common/model';
 import { clientApi } from '@/composables/useAirtable';
 import type { AirRecord, Client, ClientInfo } from '@/common/types';

@@ -52,6 +52,7 @@ export function useCreateOrder() {
 
             await orderApi.patch(`/${orderRecord.id}`, {
                 fields: {
+                    [ORDER_MAP.status]: ORDER_MAP.newStatus,
                     [ORDER_MAP.positions]: positions.value.map((pos) => pos.id)
                 }
             });

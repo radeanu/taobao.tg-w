@@ -7,11 +7,13 @@ import { useQuerySync } from '@/composables/useQuerySync';
 import { productApi } from '@/composables/useAirtable';
 import type { Product, AirRecord, AirImage } from '@/common/types';
 import { useCartStore } from './useCartStorage';
+import { useGlobalNotification } from './useNotification';
 
 export function useProductPage() {
     const route = useRoute();
     const loader = useLoading();
     const cartStore = useCartStore();
+    const notification = useGlobalNotification();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
     const product = ref<Product | null>(null);
@@ -79,7 +81,8 @@ export function useProductPage() {
 
             product.value = parseAirProductToProduct(record);
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            notification.error('Не удалось получить товар');
         } finally {
             loader.end();
         }

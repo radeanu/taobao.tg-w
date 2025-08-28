@@ -6,9 +6,11 @@ import { useLoading } from '@/composables/useLoading';
 import { useProduct } from '@/composables/useProduct';
 import { productApi } from '@/composables/useAirtable';
 import type { Product, AirPagination, AirRecord } from '@/common/types';
+import { useGlobalNotification } from '@/composables/useNotification';
 
 export function useCatalog() {
     const loader = useLoading();
+    const notification = useGlobalNotification();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
     const searchQuery = ref('');
@@ -68,7 +70,8 @@ export function useCatalog() {
 
             products.value.push(...list);
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            notification.error('Не удалось получить продукты');
         } finally {
             loader.end();
         }

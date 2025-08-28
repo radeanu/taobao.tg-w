@@ -28,7 +28,9 @@ export const ORDER_MAP = {
     clients: 'Клиенты',
     createdAt: 'Created',
     status: '订单状态 Статус заказа',
-    price: 'Стоимость Итого (Позиции)'
+    price: 'Стоимость Итого (Позиции)',
+    newStatus: '新单 Новый',
+    archiveStatus: '已完成 Выдано'
 };
 
 export const POSITION_MAP = {
