@@ -144,7 +144,7 @@ async function toggleFavorite() {
 
     .article {
         font-size: 14px;
-        color: var(--color-grey);
+        color: var(--tg-theme-button-color, var(--color-grey));
     }
 
     .btn-buy {

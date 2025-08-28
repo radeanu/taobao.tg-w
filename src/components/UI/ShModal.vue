@@ -138,10 +138,10 @@ function togglePageOverflow(display: boolean) {
 }
 
 .btn-close {
-    top: 0;
+    top: 15px;
     width: 32px;
     height: 32px;
-    right: -42px;
+    right: 15px;
     border-radius: 4px;
     position: absolute;
     color: var(--color-white);
