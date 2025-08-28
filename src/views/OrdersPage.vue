@@ -68,9 +68,11 @@ const { orders, loading, orderType } = useClientOrders();
 
 .page-header {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto auto;
     grid-template-rows: auto;
     column-gap: 10px;
+    width: 100vw;
+    margin-left: calc(var(--layout-pad-y) / 2 * -1);
 
     .tab-button {
         padding: 10px;
