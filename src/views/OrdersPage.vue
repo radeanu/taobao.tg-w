@@ -89,7 +89,7 @@ const { orders, loading, orderType } = useClientOrders();
 }
 
 .orders-content {
-    padding: var(--layout-pad-y) var(--layout-pad-x);
+    padding-block: var(--layout-pad-x);
 }
 
 .orders-list {
