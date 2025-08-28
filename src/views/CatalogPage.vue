@@ -92,20 +92,26 @@ main {
 .search-input {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid var(--color-grey3);
+    border: 1px solid var(--tg-theme-button-color, var(--color-grey3));
     border-radius: var(--border-radius-m);
     font-size: 16px;
-    background-color: var(--tg-theme-bg-color, var(--color-white));
+    background-color: var(--tg-theme-secondary-bg-color, var(--color-white));
     color: var(--tg-theme-text-color, var(--color-black));
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    &:hover,
     &:focus {
-        border-color: var(--color-blue);
+        border-color: var(--tg-theme-link-color, var(--color-blue));
     }
 
     &::placeholder {
-        color: var(--color-grey2);
+        color: var(--tg-theme-hint-color, var(--color-grey2));
+        transition: color 0.3s ease;
+    }
+
+    &:focus::placeholder {
+        opacity: 0.7;
     }
 }
 
