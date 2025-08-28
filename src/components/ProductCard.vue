@@ -19,7 +19,10 @@
             </button>
         </div>
 
-        <p class="price">{{ product.priceRub }} ₽</p>
+        <div class="price-row">
+            <p class="price">{{ product.priceRub }} ₽</p>
+            <p class="article">#{{ product.article }}</p>
+        </div>
 
         <ShButton
             :label="isInCart ? 'В корзине' : 'Купить'"
@@ -127,10 +130,21 @@ async function toggleFavorite() {
         }
     }
 
-    .price {
+    .price-row {
         margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .price {
         font-weight: bold;
         color: var(--color-red);
+    }
+
+    .article {
+        font-size: 14px;
+        color: var(--color-grey);
     }
 
     .btn-buy {

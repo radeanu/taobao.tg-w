@@ -19,6 +19,13 @@ export type AirImage = {
     };
 };
 
+export type AirtableParams = {
+    fields: string[];
+    offset?: string;
+    pageSize?: number;
+    filterByFormula?: string;
+};
+
 export type AirProduct = {
     id: string;
     article: number;

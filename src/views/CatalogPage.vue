@@ -1,41 +1,65 @@
 <template>
     <main>
-        <div v-if="loader.isLoading.value && products.length === 0" class="loading">
-            Загрузка...
+        <div v-if="displaySearch" class="search-container">
+            <input
+                v-model.trim="searchQuery"
+                type="text"
+                placeholder="Поиск по артикулу"
+                class="search-input"
+            />
         </div>
 
-        <div class="products">
-            <ProductCard v-for="item in products" :key="item.id" :product="item" />
-
-            <template v-if="loader.isLoading.value && products.length > 0">
-                <div v-for="i in 2" :key="`skeleton-${i}`" class="product-skeleton">
-                    <ShSkeleton />
-                </div>
-            </template>
-        </div>
-
-        <ShButton
-            v-if="pagination.offset"
-            label="Загрузить еще"
-            kind="telegram"
-            full-width
-            :class="{
-                'btn-more': true,
-                'btn-hidden': loader.isLoading.value
-            }"
-            @click="fetchMore"
+        <ShSkeleton
+            v-if="loader.isLoading.value && pagination.page === 1"
+            class="skeleton"
         />
+
+        <div v-else>
+            <div v-if="!products.length" class="empty">
+                <p>Ничего не найдено</p>
+            </div>
+
+            <div class="products">
+                <ProductCard v-for="item in products" :key="item.id" :product="item" />
+
+                <template v-if="loader.isLoading.value && pagination.page > 1">
+                    <div v-for="i in 2" :key="`skeleton-${i}`" class="product-skeleton">
+                        <ShSkeleton />
+                    </div>
+                </template>
+            </div>
+
+            <ShButton
+                v-if="pagination.offset"
+                label="Загрузить еще"
+                kind="telegram"
+                full-width
+                :class="{
+                    'btn-more': true,
+                    'btn-hidden': loader.isLoading.value
+                }"
+                @click="fetchMore"
+            />
+        </div>
     </main>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import { ShButton, ShSkeleton } from '@UI';
 import { useCatalog } from '@/composables/useCatalog';
 import ProductCard from '@/components/ProductCard.vue';
 
-const { loader, products, fetchMore, pagination, fetchProductsCatalog } = useCatalog();
+const { loader, products, fetchMore, pagination, fetchProductsCatalog, searchQuery } =
+    useCatalog();
+
+const displaySearch = computed(() => {
+    const isLoading = loader.isLoading.value;
+    const isSearch = searchQuery.value.length;
+
+    return isSearch || !isLoading || products.value.length;
+});
 
 onMounted(async () => {
     await fetchProductsCatalog();
@@ -46,18 +70,43 @@ onMounted(async () => {
 main {
     padding: 20px 8px;
     padding-bottom: 100px;
+    padding-top: 0;
 }
 
-.loading {
-    position: fixed;
-    top: 0;
-    left: 0;
+.skeleton {
     width: 100%;
-    z-index: 3;
-    padding: 10px 20px;
-    text-align: center;
-    color: var(--tg-theme-text-color);
+    height: 200px;
+    margin-top: 20px;
+    border-radius: var(--border-radius-m);
+}
+
+.search-container {
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    padding: 10px 0;
     background-color: var(--tg-theme-bg-color, var(--color-white));
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-grey3);
+    border-radius: var(--border-radius-m);
+    font-size: 16px;
+    background-color: var(--tg-theme-bg-color, var(--color-white));
+    color: var(--tg-theme-text-color, var(--color-black));
+    outline: none;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        border-color: var(--color-blue);
+    }
+
+    &::placeholder {
+        color: var(--color-grey2);
+    }
 }
 
 .products {
@@ -80,5 +129,10 @@ main {
     width: 100%;
     height: 300px;
     border-radius: var(--border-radius-m);
+}
+
+.empty {
+    padding: 30px 0;
+    text-align: center;
 }
 </style>

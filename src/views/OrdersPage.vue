@@ -138,7 +138,8 @@ function getPositionsText(count: number): string {
         background-color: var(--tg-theme-bg-color, var(--color-grey2));
 
         &__active {
-            background-color: var(--tg-theme-bg-color, var(--color-white));
+            color: var(--tg-theme-button-text-color, var(--color-white));
+            background-color: var(--tg-theme-button-color, var(--color-white));
         }
     }
 }

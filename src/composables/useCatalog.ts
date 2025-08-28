@@ -1,6 +1,7 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import { PRODUCT_MAP } from '@/common/model';
+import { useDebounce } from '@/composables/useDebounce';
 import { useLoading } from '@/composables/useLoading';
 import { useProduct } from '@/composables/useProduct';
 import { productApi } from '@/composables/useAirtable';
@@ -10,12 +11,26 @@ export function useCatalog() {
     const loader = useLoading();
     const { parseAirProductToProduct, populateFields } = useProduct();
 
+    const searchQuery = ref('');
     const products = ref<Product[]>([]);
     const pagination = ref<AirPagination>({
         offset: undefined,
         page: 1,
         limit: 10
     });
+
+    const handleSearch = useDebounce(async () => {
+        reset();
+        await fetchProductsCatalog();
+    }, 300);
+
+    watch(searchQuery, handleSearch);
+
+    function reset() {
+        products.value = [];
+        pagination.value.page = 1;
+        pagination.value.offset = undefined;
+    }
 
     async function fetchMore() {
         if (!pagination.value.offset) return;
@@ -28,11 +43,17 @@ export function useCatalog() {
     async function fetchProductsCatalog() {
         try {
             loader.start();
+
+            const filterByFormula = searchQuery.value.length
+                ? `{${PRODUCT_MAP.article}}="${searchQuery.value}"`
+                : undefined;
+
             const res = await productApi.get('/', {
                 params: {
                     fields: Object.values(PRODUCT_MAP),
                     offset: pagination.value.offset,
-                    pageSize: pagination.value.limit
+                    pageSize: pagination.value.limit,
+                    filterByFormula
                 }
             });
 
@@ -58,6 +79,7 @@ export function useCatalog() {
         products,
         fetchMore,
         pagination,
+        searchQuery,
         fetchProductsCatalog
     };
 }
