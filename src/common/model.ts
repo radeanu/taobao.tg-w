@@ -37,7 +37,9 @@ export const POSITION_MAP = {
     products: 'Товары (Таблица)',
     count: 'Кол-во',
     color: 'Цвета (Таблица)',
-    size: 'Размер (Таблица)'
+    size: 'Размер (Таблица)',
+    price: 'Стоимость',
+    article: '序号 Артикул'
 };
 
 export const CLIENT_MAP = {

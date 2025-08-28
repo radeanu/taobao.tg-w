@@ -40,6 +40,16 @@ export type AirProduct = {
     images: AirImage[];
 };
 
+export type AirPosition = {
+    id: string;
+    count: number;
+    price: number;
+    colors: string[];
+    sizes: string[];
+    products: string[];
+    article: number[];
+};
+
 export type AirFieldSet = {
     [key: string]:
         | undefined
@@ -47,6 +57,7 @@ export type AirFieldSet = {
         | number
         | boolean
         | ReadonlyArray<string>
+        | ReadonlyArray<number>
         | ReadonlyArray<AirImage>;
 };
 
@@ -115,4 +126,16 @@ export type Order = {
     status: string;
     price: number;
     positions: string[];
+};
+
+export type Position = {
+    id: string;
+    price: number;
+    count: number;
+    color: string;
+    size: string | null;
+    product: {
+        id: string;
+        article: number;
+    };
 };
